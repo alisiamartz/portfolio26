@@ -1,56 +1,250 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { playItems } from "../data/play.data";
+
+const frameRatios = ["aspect-[16/10]", "aspect-[4/5]", "aspect-[5/4]", "aspect-[3/4]", "aspect-[16/9]"];
 ---
 
-<BaseLayout title="Playground — Alisia Martinez" description="Experiments, sketches, and half-formed worlds.">
-  <section class="space-y-10">
-    <header class="space-y-4">
-      <div class="flex items-start gap-3">
-        <h1 class="h1">Playground ✦</h1>
-        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
-      </div>
-      <p class="text-lg muted max-w-3xl">
-        Small experiments, sketches, and half-formed worlds. This page is intentionally lightweight—more “notes” than “case study.”
-      </p>
+<BaseLayout title="Playground — Alisia Martinez" description="Editorial stack of experiments and media studies.">
+  <section class="mx-auto w-full max-w-[82rem] space-y-14 md:space-y-20">
+    <header class="space-y-3 text-center">
+      <h1 class="h1">Playground</h1>
+      <p class="mx-auto max-w-xl text-sm uppercase tracking-[0.2em] text-black/45">Editorial Stack</p>
     </header>
 
-    <div class="card p-8 space-y-4">
-      <div class="label">What you’ll find here</div>
-      <ul class="muted list-disc pl-5 space-y-2">
-        <li>Micro-prototypes & interaction studies</li>
-        <li>Visual experiments and style tests</li>
-        <li>Event concepts / themes / little rituals</li>
-        <li>Early build logs and process notes</li>
-      </ul>
-      <p class="muted">
-        If you want to collaborate—or fund something weird and wonderful—reach out.
-      </p>
+    <div class="columns-1 gap-4 md:columns-2 xl:columns-3" id="play-stack">
+      {
+        playItems.map((item, index) => (
+          <article class="mb-4 break-inside-avoid">
+            <button
+              type="button"
+              class="group block w-full text-left transition md:hover:-translate-y-0.5"
+              data-open-modal
+              data-index={index}
+              aria-label={`Open ${item.title ?? `Play item ${index + 1}`}`}
+            >
+              <div
+                class={`relative overflow-hidden rounded-2xl border border-black/10 bg-white/40 ${frameRatios[index % frameRatios.length]}`}
+                data-card
+                data-hover-video={item.hoverVideo ?? ""}
+              >
+                <img
+                  src={item.coverImage}
+                  alt={item.title ? `${item.title} cover image` : `Play item ${index + 1}`}
+                  loading="lazy"
+                  decoding="async"
+                  class="block h-full w-full object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 72vw, 840px"
+                />
+                <div class="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-black/55 to-transparent px-5 py-4 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                  <div class="text-sm text-white/90">{item.title ?? "Untitled"}</div>
+                  <div class="mt-1 text-xs uppercase tracking-[0.15em] text-white/70">{item.year}</div>
+                </div>
+              </div>
+            </button>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-      <div class="flex gap-3 pt-2">
-        <a class="btn" href="/contact">Contact</a>
-        <a class="btnGhost" href="/work">See case studies</a>
+  <dialog id="play-modal" class="fixed inset-0 z-50 m-0 h-full w-full max-h-none max-w-none border-0 bg-black/75 p-0 text-white backdrop:bg-black/75">
+    <div class="flex h-full w-full items-center justify-center p-4 md:p-8">
+      <div class="relative grid w-full max-w-6xl gap-6 overflow-hidden rounded-2xl border border-white/15 bg-[#0F0F0F] p-4 md:grid-cols-[minmax(0,1fr)_300px] md:p-6">
+        <button
+          type="button"
+          id="play-close"
+          class="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/90 transition hover:bg-white/10"
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+
+        <div class="min-h-0">
+          <div id="modal-media" class="flex max-h-[72vh] min-h-[260px] items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-black"></div>
+        </div>
+
+        <aside class="flex flex-col gap-4 border-t border-white/10 pt-4 md:border-l md:border-t-0 md:pl-6 md:pt-0">
+          <div>
+            <h2 id="modal-title" class="text-2xl font-semibold tracking-tight">Untitled</h2>
+            <p id="modal-meta" class="mt-2 text-xs uppercase tracking-[0.14em] text-white/65"></p>
+          </div>
+
+          <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+
+          <p id="modal-note" class="text-sm text-white/75"></p>
+
+          <div id="modal-links" class="mt-auto flex flex-col gap-2"></div>
+
+          <p class="text-xs uppercase tracking-[0.14em] text-white/45">Esc to close, ← → to navigate</p>
+        </aside>
       </div>
     </div>
+  </dialog>
 
-    <div class="divider-sparkle my-6" />
+  <script type="application/json" id="play-data">{JSON.stringify(playItems)}</script>
 
-    {/* Optional: placeholder grid to fill later */}
-    <section class="space-y-4">
-      <div class="label">Coming soon</div>
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="card p-5">
-          <div class="text-sm font-semibold">Experiment #1</div>
-          <div class="muted text-sm mt-2">A small interaction idea or build log entry.</div>
-        </div>
-        <div class="card p-5">
-          <div class="text-sm font-semibold">Experiment #2</div>
-          <div class="muted text-sm mt-2">A style test, concept, or mini prototype.</div>
-        </div>
-        <div class="card p-5">
-          <div class="text-sm font-semibold">Experiment #3</div>
-          <div class="muted text-sm mt-2">An event concept or playful system.</div>
-        </div>
-      </div>
-    </section>
-  </section>
+  <script>
+    const dataScript = document.getElementById("play-data");
+    const items = dataScript ? JSON.parse(dataScript.textContent || "[]") : [];
+
+    const modal = document.getElementById("play-modal");
+    const mediaHost = document.getElementById("modal-media");
+    const titleEl = document.getElementById("modal-title");
+    const metaEl = document.getElementById("modal-meta");
+    const tagsEl = document.getElementById("modal-tags");
+    const noteEl = document.getElementById("modal-note");
+    const linksEl = document.getElementById("modal-links");
+    const closeBtn = document.getElementById("play-close");
+
+    const cardNodes = Array.from(document.querySelectorAll("[data-card]"));
+    const openButtons = Array.from(document.querySelectorAll("[data-open-modal]"));
+
+    let activeIndex = 0;
+
+    const stopVideo = (node) => {
+      const video = node.querySelector("video[data-hover-preview]");
+      if (video) {
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        video.remove();
+      }
+      const img = node.querySelector("img");
+      if (img) img.classList.remove("opacity-0");
+    };
+
+    const startVideo = (node) => {
+      const hoverVideo = node.getAttribute("data-hover-video");
+      if (!hoverVideo) return;
+
+      const existing = node.querySelector("video[data-hover-preview]");
+      if (existing) {
+        existing.play().catch(() => {});
+        const img = node.querySelector("img");
+        if (img) img.classList.add("opacity-0");
+        return;
+      }
+
+      const preview = document.createElement("video");
+      preview.setAttribute("data-hover-preview", "true");
+      preview.muted = true;
+      preview.loop = true;
+      preview.autoplay = true;
+      preview.playsInline = true;
+      preview.preload = "metadata";
+      preview.className = "absolute inset-0 h-full w-full object-cover";
+      preview.src = hoverVideo;
+
+      const img = node.querySelector("img");
+      if (img) img.classList.add("transition-opacity duration-300", "opacity-0");
+
+      node.appendChild(preview);
+      preview.play().catch(() => {});
+    };
+
+    cardNodes.forEach((node) => {
+      node.addEventListener("pointerenter", () => startVideo(node));
+      node.addEventListener("pointerleave", () => stopVideo(node));
+      node.addEventListener("blur", () => stopVideo(node));
+    });
+
+    const isVideo = (src) => /\.(mp4|webm|ogg)$/i.test(src);
+
+    const renderModal = (item) => {
+      mediaHost.innerHTML = "";
+      const primaryMedia = item.hoverVideo || item.coverImage;
+
+      if (isVideo(primaryMedia)) {
+        const video = document.createElement("video");
+        video.src = primaryMedia;
+        video.controls = true;
+        video.autoplay = true;
+        video.loop = true;
+        video.muted = true;
+        video.playsInline = true;
+        video.className = "h-auto max-h-[72vh] w-full rounded-lg object-contain";
+        mediaHost.appendChild(video);
+      } else {
+        const img = document.createElement("img");
+        img.src = primaryMedia;
+        img.alt = item.title ? `${item.title} media` : "Playground media";
+        img.loading = "eager";
+        img.decoding = "async";
+        img.className = "h-auto max-h-[72vh] w-full rounded-lg object-contain";
+        mediaHost.appendChild(img);
+      }
+
+      titleEl.textContent = item.title || "Untitled";
+      metaEl.textContent = `${item.year} ${item.tags?.length ? "• " + item.tags.join(" • ") : ""}`;
+
+      tagsEl.innerHTML = "";
+      (item.tags || []).forEach((tag) => {
+        const pill = document.createElement("span");
+        pill.className = "pill pill-muted rounded-full border px-3 py-1 text-xs text-white/85";
+        pill.textContent = tag;
+        tagsEl.appendChild(pill);
+      });
+
+      noteEl.textContent = item.note || "";
+      noteEl.classList.toggle("hidden", !item.note);
+
+      linksEl.innerHTML = "";
+      (item.links || []).forEach((link) => {
+        const anchor = document.createElement("a");
+        anchor.href = link.url;
+        anchor.className = "text-sm text-white underline decoration-white/40 underline-offset-4 hover:decoration-white";
+        anchor.textContent = link.label;
+        anchor.target = link.url.startsWith("http") ? "_blank" : "_self";
+        if (anchor.target === "_blank") anchor.rel = "noopener noreferrer";
+        linksEl.appendChild(anchor);
+      });
+      linksEl.classList.toggle("hidden", !(item.links || []).length);
+    };
+
+    const openModal = (index) => {
+      activeIndex = index;
+      renderModal(items[activeIndex]);
+      modal.showModal();
+      document.body.classList.add("overflow-hidden");
+    };
+
+    const closeModal = () => {
+      const playing = mediaHost.querySelector("video");
+      if (playing) {
+        playing.pause();
+        playing.removeAttribute("src");
+        playing.load();
+      }
+      modal.close();
+      document.body.classList.remove("overflow-hidden");
+    };
+
+    const jump = (delta) => {
+      activeIndex = (activeIndex + delta + items.length) % items.length;
+      renderModal(items[activeIndex]);
+    };
+
+    openButtons.forEach((button) => {
+      button.addEventListener("click", () => openModal(Number(button.dataset.index || 0)));
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    modal.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      closeModal();
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (!modal.open) return;
+      if (event.key === "Escape") closeModal();
+      if (event.key === "ArrowRight") jump(1);
+      if (event.key === "ArrowLeft") jump(-1);
+    });
+  </script>
 </BaseLayout>
