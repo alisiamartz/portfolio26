@@ -1,11 +1,18 @@
 ---
-const { text, tone = "default" } = Astro.props;
+const { text, tone = "default", iconSrc } = Astro.props;
+
 const cls =
   tone === "muted"
     ? "pill-muted"
-    : "pill-default";
+    : tone === "pop"
+      ? "pill-pop"
+      : "pill-default";
 ---
 
 <span class={`pill ${cls}`}>
-  {text}
+  {iconSrc ? (
+    <img src={iconSrc} alt={text ?? ""} class="h-4 w-auto" loading="lazy" />
+  ) : (
+    text
+  )}
 </span>

@@ -22,6 +22,12 @@ const featured = work
       <h1 class="h1">
         I design and build experiences people can feel > digital, immersive, and story-led.
       </h1>
+        <img
+    src="/doodles/starTest.png"
+    alt=""
+    class="mt-2 h-8 w-8 rotate-6"
+    loading="lazy"
+  />
 
       <p class="muted text-lg max-w-xl">
         Prototyping / XR / Interaction systems / Storytelling
@@ -59,13 +65,13 @@ const featured = work
   </section>
 
     <!-- Divider -->
-  <div class="line my-16" />
+  <div class="divider-dots my-16" />
 
     <!-- SELECTED WORK -->
   <section class="space-y-6">
     <div class="flex items-end justify-between">
       <h2 class="h2">Selected work</h2>
-      <a class="text-sm muted hover:text-black" href="/work">All work ></a>
+      <a class="link-accent" href="/work">All work ></a>
     </div>
 
     <div class="grid md:grid-cols-2 gap-4">
@@ -76,13 +82,14 @@ const featured = work
           description={e.data.description}
           tags={e.data.tags}
           roles={e.data.roles}
+          featured={e.data.featured}
         />
       ))}
     </div>
   </section>
 
     <!-- Divider -->
-  <div class="line my-16" />
+  <div class="divider-dots my-16" />
 
 
 </BaseLayout>

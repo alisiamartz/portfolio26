@@ -1,7 +1,18 @@
 @import "tailwindcss";
 
 @layer base {
-  :root { color-scheme: light; }
+  :root {   
+    --cream: #FFFDF8;
+  --ink: #111111;
+  --line: rgba(17,17,17,.12);
+
+  /* playful accents */
+  --pop1: #2F6BFF;  /* cobalt-ish */
+  --pop2: #FF4FB8;  /* punchy pink */
+  --pop3: #22C55E;  /* fresh green */
+  --gardenGreen:#2FBF71;
+  --butter: #FFE27A; /* soft yellow */
+ }
   body { @apply bg-[#FFFDF8] text-[#111111] antialiased; }
   a { @apply text-[#111111]; }
 }
@@ -12,6 +23,53 @@
 
   .label { @apply text-black/50 text-xs uppercase tracking-wide; }
   .muted { @apply text-black/60; }
+
+  /* Accent 1: links */
+  .link-accent {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--pop1) 55%, transparent);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+  }
+  .link-accent:hover {
+    text-decoration-color: var(--pop2);
+  }
+
+  /* Accent 2: "sticker" pill */
+  .pill-pop {
+   border-color: color-mix(in oklab, var(--ink) 18%, transparent);
+    /* background: color-mix(in oklab, var(--butter) 55%, white); */
+    color: var(--ink);  }
+
+  .pill {
+   /* @apply inline-flex items-center rounded-full border px-3 py-1 text-xs; */
+    @apply inline-flex items-center;
+  }
+
+
+  .pill-default {
+    border-color: var(--line);
+    background: white;
+    color: color-mix(in oklab, var(--ink) 85%, transparent);
+  }
+
+  .pill-muted {
+    border-color: var(--line);
+    background: white;
+    color: color-mix(in oklab, var(--ink) 55%, transparent);
+  }
+
+  /* Accent 3: dotted divider */
+  .divider-dots {
+    border-top: 1px dashed var(--line);
+  }
+
+  /* Accent 4: tiny stamp/badge */
+  .stamp {
+    border: 1px solid var(--line);
+    background: color-mix(in oklab, var(--pop3) 12%, white);
+  }
 
   .line { @apply border-t border-black/10; }
 
