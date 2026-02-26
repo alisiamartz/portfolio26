@@ -2,10 +2,10 @@
 const { text, tone = "default" } = Astro.props;
 const cls =
   tone === "muted"
-    ? "border-white/10 text-white/60"
-    : "border-white/20 text-white/80";
+    ? "pill-muted"
+    : "pill-default";
 ---
 
-<span class={`text-xs px-3 py-1 rounded-full border ${cls}`}>
+<span class={`pill ${cls}`}>
   {text}
 </span>

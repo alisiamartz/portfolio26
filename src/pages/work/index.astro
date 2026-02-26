@@ -24,11 +24,11 @@ const allTags = Array.from(new Set(work.flatMap((e) => e.data.tags))).sort();
     </div>
 
     <div class="flex flex-wrap gap-2">
-      <a class={`text-xs px-3 py-1 rounded-full border ${!tag ? "border-white/30" : "border-white/10 text-white/60"}`} href="/work">All</a>
+      <a class={`btn-chip ${!tag ? "btn-chip-active" : "btn-chip-muted"}`} href="/work">All</a>
       {allTags.map((t) => (
         <a
-          class={`text-xs px-3 py-1 rounded-full border ${
-            tag === t ? "border-white/30" : "border-white/10 text-white/60"
+          class={`btn-chip ${
+            tag === t ? "btn-chip-active" : "btn-chip-muted"
           }`}
           href={`/work?tag=${encodeURIComponent(t)}`}
         >
