@@ -1,11 +1,75 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import WorkCard from "../components/WorkCard.astro";
+import { getCollection } from "astro:content";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const work = await getCollection("work");
+const featured = work
+  .filter((e) => e.data.featured)
+  .slice(0, 6);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<BaseLayout
+  title="Alisia Martinez — Experience Designer + Prototyper"
+  description="I design and build experiences people can feel—digital, immersive, and story-led."
+>
+  <section class="grid md:grid-cols-2 gap-10 items-start">
+    <div class="space-y-6">
+      <h1 class="text-5xl font-semibold tracking-tight leading-[1.05]">
+        I design and build experiences people can feel—digital, immersive, and story-led.
+      </h1>
+      <p class="text-white/70 text-lg max-w-xl">
+        Prototyping • XR • Interaction systems • Storytelling
+      </p>
+      <div class="flex gap-3">
+        <a class="border border-white/20 rounded-full px-5 py-2 hover:border-white/40" href="/work">
+          View work
+        </a>
+        <a class="border border-white/10 text-white/70 rounded-full px-5 py-2 hover:text-white" href="/watch">
+          Watch
+        </a>
+      </div>
+    </div>
+
+    <div class="border border-white/10 rounded-xl p-6 text-white/70">
+      <div class="text-white/50 text-xs uppercase tracking-wide">Signature lanes</div>
+      <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
+        <a class="border border-white/10 rounded-lg p-4 hover:border-white/25" href="/work?tag=Prototyping">Interactive / Prototypes</a>
+        <a class="border border-white/10 rounded-lg p-4 hover:border-white/25" href="/work?tag=XR%2FVR">Immersive / XR</a>
+        <a class="border border-white/10 rounded-lg p-4 hover:border-white/25" href="/watch">Stories / Films</a>
+        <a class="border border-white/10 rounded-lg p-4 hover:border-white/25" href="/playground">Live Experiences</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-16 space-y-6">
+    <div class="flex items-end justify-between">
+      <h2 class="text-2xl font-semibold tracking-tight">Selected work</h2>
+      <a class="text-sm text-white/70 hover:text-white" href="/work">All work →</a>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      {featured.map((e) => (
+        <WorkCard
+          href={`/work/${e.slug}`}
+          title={e.data.title}
+          description={e.data.description}
+          tags={e.data.tags}
+          roles={e.data.roles}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-20 border border-white/10 rounded-xl p-8">
+    <div class="text-white/50 text-xs uppercase tracking-wide">Point of view</div>
+    <div class="mt-4 text-lg max-w-3xl">
+      I build prototypes and stories that make ambiguity tangible—so teams and audiences can feel what’s true.
+    </div>
+    <ul class="mt-5 text-white/70 list-disc pl-5 space-y-2">
+      <li>Pacing & feedback: every moment answers “what happened” and “what next.”</li>
+      <li>Clarity under uncertainty: prototypes turn opinions into testable artifacts.</li>
+      <li>Delight grounded in usability: charm only matters if it helps understanding.</li>
+    </ul>
+  </section>
+</BaseLayout>

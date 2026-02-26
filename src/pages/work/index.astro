@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import WorkCard from "../../components/WorkCard.astro";
+import { getCollection } from "astro:content";
+
+const work = await getCollection("work");
+
+// read optional prefilter: /work?tag=Prototyping
+const tag = Astro.url.searchParams.get("tag");
+const list = tag
+  ? work.filter((e) => e.data.tags.includes(tag))
+  : work;
+
+const allTags = Array.from(new Set(work.flatMap((e) => e.data.tags))).sort();
+---
+
+<BaseLayout title="Work — Alisia Martinez" description="Selected case studies and experiments.">
+  <section class="space-y-6">
+    <div class="space-y-2">
+      <h1 class="text-4xl font-semibold tracking-tight">Work</h1>
+      <p class="text-white/70 max-w-2xl">
+        Case studies across prototyping, XR, interaction systems, and story-led experiences.
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <a class={`text-xs px-3 py-1 rounded-full border ${!tag ? "border-white/30" : "border-white/10 text-white/60"}`} href="/work">All</a>
+      {allTags.map((t) => (
+        <a
+          class={`text-xs px-3 py-1 rounded-full border ${
+            tag === t ? "border-white/30" : "border-white/10 text-white/60"
+          }`}
+          href={`/work?tag=${encodeURIComponent(t)}`}
+        >
+          {t}
+        </a>
+      ))}
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 pt-4">
+      {list.map((e) => (
+        <WorkCard
+          href={`/work/${e.slug}`}
+          title={e.data.title}
+          description={e.data.description}
+          tags={e.data.tags}
+          roles={e.data.roles}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

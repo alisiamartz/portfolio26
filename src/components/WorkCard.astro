@@ -1,0 +1,15 @@
+---
+import Pill from "./Pill.astro";
+const { href, title, description, tags = [], roles = [] } = Astro.props;
+---
+
+<a href={href} class="block border border-white/10 rounded-xl p-5 hover:border-white/25 transition">
+  <div class="space-y-3">
+    <div class="text-lg font-semibold tracking-tight">{title}</div>
+    <div class="text-white/70 text-sm">{description}</div>
+    <div class="flex flex-wrap gap-2 pt-2">
+      {roles.slice(0, 2).map((r) => <Pill text={r} />)}
+      {tags.slice(0, 3).map((t) => <Pill text={t} tone="muted" />)}
+    </div>
+  </div>
+</a>

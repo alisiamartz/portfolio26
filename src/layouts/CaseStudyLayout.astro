@@ -1,0 +1,59 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Pill from "../components/Pill.astro";
+import Media from "../components/Media.astro";
+
+const { entry } = Astro.props;
+const data = entry.data;
+---
+
+<BaseLayout title={`${data.title} — Alisia Martinez`} description={data.description}>
+  <article class="space-y-10">
+    <header class="space-y-5">
+      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight">{data.title}</h1>
+      <p class="text-white/70 text-lg max-w-3xl">{data.description}</p>
+
+      <div class="flex flex-wrap gap-2">
+        {data.roles?.map((r) => <Pill text={r} />)}
+        {data.tags?.map((t) => <Pill text={t} tone="muted" />)}
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-4 text-sm text-white/70">
+        {data.timeline && <div><div class="text-white/50">Timeline</div><div>{data.timeline}</div></div>}
+        {data.tools?.length ? (
+          <div class="md:col-span-2">
+            <div class="text-white/50">Tools</div>
+            <div>{data.tools.join(" • ")}</div>
+          </div>
+        ) : null}
+      </div>
+
+      {data.hero && (
+        <div class="mt-6">
+          <Media {...data.hero} />
+        </div>
+      )}
+
+      {data.atAGlance && (
+        <section class="grid md:grid-cols-3 gap-4 border border-white/10 rounded-xl p-5">
+          <div>
+            <div class="text-white/50 text-xs uppercase tracking-wide">Problem</div>
+            <div class="mt-2">{data.atAGlance.problem}</div>
+          </div>
+          <div>
+            <div class="text-white/50 text-xs uppercase tracking-wide">What I built</div>
+            <div class="mt-2">{data.atAGlance.built}</div>
+          </div>
+          <div>
+            <div class="text-white/50 text-xs uppercase tracking-wide">Impact</div>
+            <div class="mt-2">{data.atAGlance.impact}</div>
+          </div>
+        </section>
+      )}
+    </header>
+
+    <div class="prose prose-invert max-w-none prose-headings:tracking-tight prose-a:text-white">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

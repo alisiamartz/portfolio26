@@ -1,0 +1,9 @@
+---
+const { type = "image", src, alt = "" } = Astro.props;
+---
+
+{type === "video" ? (
+  <video class="w-full rounded-xl border border-white/10" src={src} controls playsinline />
+) : (
+  <img class="w-full rounded-xl border border-white/10" src={src} alt={alt} loading="lazy" />
+)}
