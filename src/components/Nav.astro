@@ -1,27 +1,14 @@
----
-const links = [
-  { href: "/work", label: "Work" },
-  { href: "/playground", label: "Playground" },
-  { href: "/watch", label: "Watch" },
-  { href: "/about", label: "About" },
-];
----
+<header class="border-b border-black/10 bg-[#FFFDF8]">
+  <div class="container py-4 flex items-center justify-between">
+    <a href="/" class="font-semibold tracking-tight">Alisia Martinez</a>
 
-<header class="sticky top-0 z-30 border-b border-white/10 bg-black/45 backdrop-blur-xl">
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-    <a href="/" class="text-sm font-semibold tracking-[0.08em] text-white/95 uppercase">Alisia Martinez</a>
-
-    <nav class="hidden items-center gap-6 md:flex">
-      {links.map((l) => (
-        <a href={l.href} class="nav-link">{l.label}</a>
-      ))}
+    <nav class="hidden md:flex items-center gap-6 text-sm text-black/70">
+      <a href="/work" class="hover:text-black">Work</a>
+      <a href="/playground" class="hover:text-black">Playground</a>
+      <a href="/watch" class="hover:text-black">Watch</a>
+      <a href="/about" class="hover:text-black">About</a>
     </nav>
 
-    <a
-      href="/contact"
-      class="btn btn-primary"
-    >
-      Contact
-    </a>
+    <a href="/contact" class="btn">Contact</a>
   </div>
 </header>

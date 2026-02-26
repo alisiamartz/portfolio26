@@ -1,76 +1,26 @@
 @import "tailwindcss";
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
-
-  body {
-    @apply bg-zinc-950 text-zinc-100 antialiased;
-    background-image:
-      radial-gradient(1200px 700px at 80% -10%, rgba(161, 161, 170, 0.16), transparent 55%),
-      radial-gradient(900px 540px at 0% 0%, rgba(113, 113, 122, 0.13), transparent 60%);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4 {
-    @apply text-zinc-50;
-    text-wrap: balance;
-  }
-
-  p {
-    text-wrap: pretty;
-  }
+  :root { color-scheme: light; }
+  body { @apply bg-[#FFFDF8] text-[#111111] antialiased; }
+  a { @apply text-[#111111]; }
 }
 
 @layer components {
-  .surface {
-    @apply border border-white/12 bg-white/4 backdrop-blur-sm shadow-[0_10px_40px_-24px_rgba(255,255,255,0.4)];
-  }
+  .container { @apply mx-auto max-w-6xl px-6; }
+  .section { @apply py-16 md:py-24; }
 
-  .surface-soft {
-    @apply border border-white/8 bg-white/3 backdrop-blur-sm;
-  }
+  .label { @apply text-black/50 text-xs uppercase tracking-wide; }
+  .muted { @apply text-black/60; }
 
-  .nav-link {
-    @apply text-sm text-white/70 transition-colors duration-300 hover:text-white;
-  }
+  .line { @apply border-t border-black/10; }
 
-  .btn {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-medium tracking-wide transition-all duration-300;
-  }
+  .card { @apply rounded-xl border border-black/10 bg-white; }
+  .cardHover { @apply transition hover:border-black/25; }
 
-  .btn-primary {
-    @apply border border-white/25 bg-white/[0.06] text-white hover:-translate-y-px hover:border-white/40 hover:bg-white/[0.1];
-  }
+  .btn { @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm border border-black/20 hover:border-black/40 transition bg-white; }
+  .btnGhost { @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm border border-black/10 text-black/70 hover:text-black hover:border-black/25 transition bg-white; }
 
-  .btn-secondary {
-    @apply border border-white/10 bg-white/[0.03] text-white/75 hover:-translate-y-px hover:border-white/25 hover:text-white;
-  }
-
-  .btn-chip {
-    @apply rounded-full border px-3 py-1 text-xs tracking-wide transition-all duration-300;
-  }
-
-  .btn-chip-active {
-    @apply border-white/35 bg-white/[0.1] text-white;
-  }
-
-  .btn-chip-muted {
-    @apply border-white/12 bg-white/[0.02] text-white/65 hover:border-white/25 hover:text-white;
-  }
-
-  .pill {
-    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs tracking-wide;
-  }
-
-  .pill-default {
-    @apply border-white/20 bg-white/[0.06] text-white/85;
-  }
-
-  .pill-muted {
-    @apply border-white/10 bg-white/[0.03] text-white/60;
-  }
+  .h1 { @apply text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05]; }
+  .h2 { @apply text-2xl md:text-3xl font-semibold tracking-tight; }
 }
