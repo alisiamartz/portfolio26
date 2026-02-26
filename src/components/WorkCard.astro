@@ -3,13 +3,10 @@ import Pill from "./Pill.astro";
 const { href, title, description, tags = [], roles = [] } = Astro.props;
 ---
 
-<a
-  href={href}
-  class="surface block rounded-2xl p-5 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.07]"
->
+<a href={href} class="card cardHover block p-6">
   <div class="space-y-3">
     <div class="text-lg font-semibold tracking-tight">{title}</div>
-    <div class="text-sm text-white/70">{description}</div>
+    <div class="text-sm muted">{description}</div>
     <div class="flex flex-wrap gap-2 pt-2">
       {roles.slice(0, 2).map((r) => <Pill text={r} />)}
       {tags.slice(0, 3).map((t) => <Pill text={t} tone="muted" />)}
