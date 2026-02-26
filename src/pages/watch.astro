@@ -1,0 +1,58 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Watch — Alisia Martinez" description="Stories, build logs, and mini-doc energy.">
+  <section class="space-y-10">
+    <header class="space-y-4">
+      <div class="flex items-start gap-3">
+        <h1 class="h1">Watch ✦</h1>
+        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
+      </div>
+      <p class="text-lg muted max-w-3xl">
+        Stories, build logs, and mini-documentary energy—coming together piece by piece.
+      </p>
+    </header>
+
+    <section class="card p-8 space-y-4">
+      <div class="label">What I’m making</div>
+      <ul class="muted list-disc pl-5 space-y-2">
+        <li><strong>Build logs:</strong> how I prototype and iterate</li>
+        <li><strong>Docs & essays:</strong> story-led breakdowns of creative/technical projects</li>
+        <li><strong>Behind the scenes:</strong> tools, decisions, and “what I learned”</li>
+      </ul>
+      <p class="muted">
+        A short trailer will live here soon—something that sets the tone and makes the channel feel real.
+      </p>
+    </section>
+
+    <div class="line my-10" />
+
+    {/* Optional “series” blocks */}
+    <section class="grid md:grid-cols-3 gap-4">
+      <div class="card p-6 space-y-2">
+        <div class="text-sm font-semibold">Docs & Essays</div>
+        <div class="muted text-sm">Narrative breakdowns with a serious + playful tone.</div>
+      </div>
+      <div class="card p-6 space-y-2">
+        <div class="text-sm font-semibold">Build Logs</div>
+        <div class="muted text-sm">From idea → prototype → iteration, with receipts.</div>
+      </div>
+      <div class="card p-6 space-y-2">
+        <div class="text-sm font-semibold">Behind the Scenes</div>
+        <div class="muted text-sm">Process, tools, and the messy middle.</div>
+      </div>
+    </section>
+
+    <section class="card p-8 space-y-4">
+      <div class="label">Want updates?</div>
+      <p class="muted">
+        If you want the channel link when the first video is live, send me a note.
+      </p>
+      <div class="flex gap-3">
+        <a class="btn" href="/contact">Contact</a>
+        <a class="btnGhost" href="/work">Browse work</a>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

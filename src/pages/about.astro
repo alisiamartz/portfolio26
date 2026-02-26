@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About — Alisia Martinez" description="Experience designer + prototyper. I build things people can feel.">
+  <section class="space-y-10">
+    <header class="space-y-4">
+      <div class="flex items-start gap-3">
+        <h1 class="h1">About ✦</h1>
+        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
+      </div>
+
+      <p class="text-lg muted max-w-3xl">
+        I’m Alisia Martinez—an experience designer and prototyper who builds things people can <strong>feel</strong>.
+      </p>
+    </header>
+
+    <div class="card p-8 space-y-6">
+      <p class="text-lg max-w-4xl">
+        At the core of everything I do is the same impulse: to translate imagination into real life—turning a vibe,
+        a story, or a messy early idea into something tangible enough to react to, test, and believe.
+      </p>
+
+      <p class="muted max-w-4xl">
+        I’m drawn to work that creates connection and aliveness—experiences that help people feel more oriented,
+        more seen, and more themselves. That can look like a product prototype that de-risks a decision,
+        an immersive interaction that makes a moment land in your body, or a story-shaped experience that changes
+        how you understand what just happened.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <section class="card p-8 space-y-4">
+        <div class="label">What I’m great at</div>
+        <ul class="muted list-disc pl-5 space-y-2">
+          <li><strong>Turning ambiguity into artifacts.</strong> I make ideas real fast so teams can stop debating in theory.</li>
+          <li><strong>Designing moment-to-moment experience.</strong> Pacing, feedback, clarity, delight—without losing the plot.</li>
+          <li><strong>Systems thinking with taste.</strong> State, transitions, edge cases, interaction rules that feel coherent.</li>
+          <li><strong>Worldbuilding.</strong> Atmosphere, tone, and the emotional logic of an experience—not just “features.”</li>
+        </ul>
+      </section>
+
+      <section class="card p-8 space-y-4">
+        <div class="label">How I work</div>
+        <p class="muted">
+          I build prototypes that are believable enough to trigger honest feedback, comparable enough to evaluate options
+          fairly, and crafted enough to feel real—without over-investing too early.
+        </p>
+        <ul class="muted list-disc pl-5 space-y-2">
+          <li><strong>Believable:</strong> real enough to feel true</li>
+          <li><strong>Comparable:</strong> options can be evaluated apples-to-apples</li>
+          <li><strong>Crafted:</strong> high signal, low noise</li>
+        </ul>
+      </section>
+    </div>
+
+    <section class="card p-8 space-y-4">
+      <div class="label">Outside the work</div>
+      <p class="muted max-w-4xl">
+        I’m building a broader creative practice that includes storytelling (video), live experiences (events), and playful
+        worldbuilding. My career is portfolio-shaped on purpose: a body of work that’s cohesive because it follows a point
+        of view, not a single title.
+      </p>
+
+      <div class="flex flex-wrap gap-3 pt-2">
+        <a class="btn" href="/work">View work</a>
+        <a class="btnGhost" href="/contact">Say hi ✦</a>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

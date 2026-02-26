@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Playground — Alisia Martinez" description="Experiments, sketches, and half-formed worlds.">
+  <section class="space-y-10">
+    <header class="space-y-4">
+      <div class="flex items-start gap-3">
+        <h1 class="h1">Playground ✦</h1>
+        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
+      </div>
+      <p class="text-lg muted max-w-3xl">
+        Small experiments, sketches, and half-formed worlds. This page is intentionally lightweight—more “notes” than “case study.”
+      </p>
+    </header>
+
+    <div class="card p-8 space-y-4">
+      <div class="label">What you’ll find here</div>
+      <ul class="muted list-disc pl-5 space-y-2">
+        <li>Micro-prototypes & interaction studies</li>
+        <li>Visual experiments and style tests</li>
+        <li>Event concepts / themes / little rituals</li>
+        <li>Early build logs and process notes</li>
+      </ul>
+      <p class="muted">
+        If you want to collaborate—or fund something weird and wonderful—reach out.
+      </p>
+
+      <div class="flex gap-3 pt-2">
+        <a class="btn" href="/contact">Contact</a>
+        <a class="btnGhost" href="/work">See case studies</a>
+      </div>
+    </div>
+
+    <div class="divider-sparkle my-6" />
+
+    {/* Optional: placeholder grid to fill later */}
+    <section class="space-y-4">
+      <div class="label">Coming soon</div>
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="card p-5">
+          <div class="text-sm font-semibold">Experiment #1</div>
+          <div class="muted text-sm mt-2">A small interaction idea or build log entry.</div>
+        </div>
+        <div class="card p-5">
+          <div class="text-sm font-semibold">Experiment #2</div>
+          <div class="muted text-sm mt-2">A style test, concept, or mini prototype.</div>
+        </div>
+        <div class="card p-5">
+          <div class="text-sm font-semibold">Experiment #3</div>
+          <div class="muted text-sm mt-2">An event concept or playful system.</div>
+        </div>
+      </div>
+    </section>
+  </section>
+</BaseLayout>

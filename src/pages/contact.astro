@@ -1,0 +1,56 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Contact — Alisia Martinez" description="Work inquiries, collaborations, and friendly hellos.">
+  <section class="space-y-10">
+    <header class="space-y-4">
+      <div class="flex items-start gap-3">
+        <h1 class="h1">Contact ✦</h1>
+        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
+      </div>
+      <p class="text-lg muted max-w-3xl">
+        Want to build something people can feel? I’m open to work, collaborations, and friendly hellos.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <section class="card p-8 space-y-4">
+        <div class="label">Work / consulting</div>
+        <p class="muted">
+          If you’re looking for a prototyper or experience designer—especially for ambiguous, high-leverage problems—tell me what you’re building.
+        </p>
+        <ul class="muted list-disc pl-5 space-y-2">
+          <li>rapid prototyping & interaction models</li>
+          <li>systems behavior, edge cases, flows</li>
+          <li>XR / immersive interaction design</li>
+        </ul>
+      </section>
+
+      <section class="card p-8 space-y-4">
+        <div class="label">Collaborations / media</div>
+        <p class="muted">
+          I’m also building a broader creative brand—storytelling, events, and playful worldbuilding. If you have something weird and wonderful, I’m listening.
+        </p>
+      </section>
+    </div>
+
+    <section class="card p-8 space-y-4">
+      <div class="label">Links</div>
+      <p class="muted">
+        Add your preferred contact methods here:
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-3 text-sm">
+        <a class="card cardHover p-4 link-sparkle" href="mailto:you@example.com">Email</a>
+        <a class="card cardHover p-4 link-sparkle" href="https://www.linkedin.com/in/YOURHANDLE">LinkedIn</a>
+        <a class="card cardHover p-4 link-sparkle" href="https://github.com/alisiamartz/portfolio26">GitHub</a>
+        <a class="card cardHover p-4 link-sparkle" href="https://www.youtube.com/@YOURCHANNEL">YouTube</a>
+      </div>
+
+      <p class="muted text-xs">
+        Tip: replace the placeholders with your real handles.
+      </p>
+    </section>
+  </section>
+</BaseLayout>

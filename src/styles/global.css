@@ -3,18 +3,17 @@
 @layer base {
   :root {   
     --cream: #FFFDF8;
-  --ink: #111111;
-  --line: rgba(17,17,17,.12);
+    --ink: #111111;
+    --line: rgba(17,17,17,.12);
 
-  /* playful accents */
-  --pop1: #2F6BFF;  /* cobalt-ish */
-  --pop2: #FF4FB8;  /* punchy pink */
-  --pop3: #22C55E;  /* fresh green */
-  --gardenGreen:#2FBF71;
-  --butter: #FFE27A; /* soft yellow */
+    /* accents (use sparingly) */
+    --pop1: #2F6BFF;        /* cobalt */
+    --pop2: #FF4FB8;        /* pink hover */
+    --gardenGreen: #2FBF71; /* warm green */
+    --butter: #FFE27A;      /* sticker yellow */
  }
-  body { @apply bg-[#FFFDF8] text-[#111111] antialiased; }
-  a { @apply text-[#111111]; }
+  body { @apply bg-[var(--cream)] text-[var(--ink)] antialiased; }
+  a { @apply text-[var(--ink)]; }
 }
 
 @layer components {
@@ -25,6 +24,7 @@
   .muted { @apply text-black/60; }
 
   /* Accent 1: links */
+  .link-sparkle,
   .link-accent {
     color: var(--ink);
     text-decoration: underline;
@@ -32,6 +32,7 @@
     text-underline-offset: 4px;
     text-decoration-thickness: 2px;
   }
+  .link-sparkle:hover,
   .link-accent:hover {
     text-decoration-color: var(--pop2);
   }
@@ -43,7 +44,7 @@
     color: var(--ink);  }
 
   .pill {
-   /* @apply inline-flex items-center rounded-full border px-3 py-1 text-xs; */
+   /*     @apply inline-flex items-center rounded-full border px-3 py-1 text-xs leading-none; */
     @apply inline-flex items-center;
   }
 
@@ -67,8 +68,10 @@
 
   /* Accent 4: tiny stamp/badge */
   .stamp {
+    @apply inline-flex items-center rounded-full px-3 py-1 text-xs;
     border: 1px solid var(--line);
-    background: color-mix(in oklab, var(--pop3) 12%, white);
+    background: color-mix(in oklab, var(--gardenGreen) 12%, white);
+    color: var(--ink);
   }
 
   .line { @apply border-t border-black/10; }

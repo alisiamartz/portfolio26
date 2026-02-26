@@ -6,10 +6,22 @@ import "../styles/global.css";
 const { title = "Alisia Martinez", description = "" } = Astro.props;
 ---
 
-<body>
-  <Nav />
-  <main class="container section">
-    <slot />
-  </main>
-  <Footer />
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+
+  <body>
+    <div class="pointer-events-none fixed inset-0 opacity-[0.05]">
+  <div class="absolute inset-0 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:18px_18px]"></div>
+</div>
+    <Nav />
+    <main class="container section">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

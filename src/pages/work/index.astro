@@ -45,6 +45,7 @@ const allTags = Array.from(new Set(work.flatMap((e) => e.data.tags))).sort();
           description={e.data.description}
           tags={e.data.tags}
           roles={e.data.roles}
+          featured={e.data.featured}
         />
       ))}
     </div>
