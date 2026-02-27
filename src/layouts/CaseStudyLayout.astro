@@ -5,55 +5,94 @@ import Media from "../components/Media.astro";
 
 const { entry } = Astro.props;
 const data = entry.data;
+
+// Precompute view-model-y stuff once
+const roles = data.roles ?? [];
+const tags = data.tags ?? [];
+const hasTimeline = Boolean(data.timeline);
+const toolsText = (data.tools?.length ?? 0) > 0 ? data.tools.join(" • ") : null;
+
+const hero = data.hero; // { type?, src, alt? } (whatever your schema is)
+const atAGlance = data.atAGlance; // { problem, built, impact }
 ---
 
-<BaseLayout title={`${data.title} — Alisia Martinez`} description={data.description}>
-  <article class="space-y-10">
-    <header class="space-y-5">
-      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight">{data.title}</h1>
-      <p class="text-white/70 text-lg max-w-3xl">{data.description}</p>
+<BaseLayout title={`Alisia Martinez - ${data.title}`} description={data.description}>
+  <article class="case">
+    <header class="case__header">
+      <h1 class="case__title text-4xl md:text-5xl font-semibold tracking-tight">{data.title}</h1>
 
-      <div class="flex flex-wrap gap-2">
-        {data.roles?.map((r) => <Pill text={r} />)}
-        {data.tags?.map((t) => <Pill text={t} tone="muted" />)}
-      </div>
+      {data.description && <p class="case__desc">{data.description}</p>}
 
-      <div class="grid md:grid-cols-3 gap-4 text-sm text-white/70">
-        {data.timeline && <div><div class="text-white/50">Timeline</div><div>{data.timeline}</div></div>}
-        {data.tools?.length ? (
-          <div class="md:col-span-2">
-            <div class="text-white/50">Tools</div>
-            <div>{data.tools.join(" • ")}</div>
-          </div>
-        ) : null}
-      </div>
-
-      {data.hero && (
-        <div class="mt-6">
-          <Media {...data.hero} />
+      {(roles.length || tags.length) > 0 && (
+        <div class="case__pills">
+          {roles.map((r) => <Pill text={r} tone="muted" />)}
+          {tags.map((t) => <Pill text={t} tone="default" />)}
         </div>
       )}
 
-      {data.atAGlance && (
-        <section class="grid md:grid-cols-3 gap-4 border border-white/10 rounded-xl p-5">
-          <div>
-            <div class="text-white/50 text-xs uppercase tracking-wide">Problem</div>
-            <div class="mt-2">{data.atAGlance.problem}</div>
-          </div>
-          <div>
-            <div class="text-white/50 text-xs uppercase tracking-wide">What I built</div>
-            <div class="mt-2">{data.atAGlance.built}</div>
-          </div>
-          <div>
-            <div class="text-white/50 text-xs uppercase tracking-wide">Impact</div>
-            <div class="mt-2">{data.atAGlance.impact}</div>
-          </div>
-        </section>
-      )}
+      <dl class="case__meta">
+        {hasTimeline && (
+          <>
+            <dt>Timeline</dt>
+            <dd>{data.timeline}</dd>
+          </>
+        )}
+
+        {toolsText && (
+          <>
+            <dt>Tools</dt>
+            <dd>{toolsText}</dd>
+          </>
+        )}
+      </dl>
     </header>
 
-    <div class="prose prose-invert max-w-none prose-headings:tracking-tight prose-a:text-white">
+    {hero && (
+      <section class="case__hero">
+        {/* adjust props to match your hero shape */}
+        <Media type={hero.type ?? "image"} src={hero.src} alt={hero.alt ?? data.title} />
+      </section>
+    )}
+
+    {atAGlance && (
+      <section class="case__ataglance">
+        <div class="grid3">
+          <div class="card">
+            <h2>Problem</h2>
+            <p>{atAGlance.problem}</p>
+          </div>
+          <div class="card">
+            <h2>What I built</h2>
+            <p>{atAGlance.built}</p>
+          </div>
+          <div class="card">
+            <h2>Impact</h2>
+            <p>{atAGlance.impact}</p>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <section class="case__body">
       <slot />
-    </div>
+    </section>
   </article>
 </BaseLayout>
+
+<style>
+  /* keep/replace with your existing styling system */
+  .case { max-width: 980px; margin: 0 auto; padding: 48px 20px; }
+  .case__header { display: grid; gap: 16px; }
+  .case__title { margin: 0; }
+  .case__desc { margin: 0; opacity: 0.9; }
+  .case__pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .case__meta { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 8px 0 0; }
+  .case__meta dt { opacity: 0.7; }
+  .case__meta dd { margin: 0; }
+  .case__hero { margin-top: 24px; }
+  .case__ataglance { margin-top: 28px; }
+  .grid3 { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card { border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; }
+  .case__body { margin-top: 36px; }
+  @media (max-width: 800px) { .grid3 { grid-template-columns: 1fr; } .case__meta { grid-template-columns: 1fr; } }
+</style>
