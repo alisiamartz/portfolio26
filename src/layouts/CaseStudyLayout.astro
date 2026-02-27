@@ -2,6 +2,9 @@
 import BaseLayout from "./BaseLayout.astro";
 import Pill from "../components/Pill.astro";
 import Media from "../components/Media.astro";
+import CasePhoneMedia from "../components/CasePhoneMedia.astro";
+import CaseMediaPair from "../components/CaseMediaPair.astro";
+import CaseMotionMedia from "../components/CaseMotionMedia.astro";
 
 const { entry } = Astro.props;
 const data = entry.data;
@@ -14,6 +17,13 @@ const toolsText = (data.tools?.length ?? 0) > 0 ? data.tools.join(" • ") : nul
 
 const hero = data.hero; // { type?, src, alt? } (whatever your schema is)
 const atAGlance = data.atAGlance; // { problem, built, impact }
+const processSections = [
+  { id: "overview", label: "Overview" },
+  { id: "challenge", label: "Challenge" },
+  { id: "approach", label: "Approach" },
+  { id: "process", label: "Process" },
+  { id: "outcome", label: "Outcome" },
+];
 ---
 
 <BaseLayout title={`Alisia Martinez - ${data.title}`} description={data.description}>
@@ -49,8 +59,29 @@ const atAGlance = data.atAGlance; // { problem, built, impact }
 
     {hero && (
       <section class="case__hero">
-        {/* adjust props to match your hero shape */}
-        <Media type={hero.type ?? "image"} src={hero.src} alt={hero.alt ?? data.title} />
+        {hero.type === "phone" ? (
+          <CasePhoneMedia src={hero.src} alt={hero.alt ?? data.title} caption={hero.caption} />
+        ) : hero.type === "pair" ? (
+          <CaseMediaPair
+            leftSrc={hero.leftSrc}
+            leftAlt={hero.leftAlt}
+            rightSrc={hero.rightSrc}
+            rightAlt={hero.rightAlt}
+            caption={hero.caption}
+          />
+        ) : hero.type === "motion" ? (
+          <CaseMotionMedia
+            src={hero.src}
+            alt={hero.alt ?? data.title}
+            caption={hero.caption}
+            loop={hero.loop}
+            autoplay={hero.autoplay}
+            muted={hero.muted}
+            controls={hero.controls}
+          />
+        ) : (
+          <Media type={hero.type ?? "image"} src={hero.src} alt={hero.alt ?? data.title} />
+        )}
       </section>
     )}
 
@@ -73,8 +104,36 @@ const atAGlance = data.atAGlance; // { problem, built, impact }
       </section>
     )}
 
-    <section class="case__body">
-      <slot />
+    <section class="case__body" aria-label="Case study process">
+      <details class="case__toc-mobile">
+        <summary>On this page</summary>
+        <nav aria-label="On this page">
+          <ol>
+            {processSections.map((section) => (
+              <li>
+                <a href={`#${section.id}`}>{section.label}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </details>
+
+      <div class="case__body-layout">
+        <aside class="case__toc-desktop" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            {processSections.map((section) => (
+              <li>
+                <a href={`#${section.id}`}>{section.label}</a>
+              </li>
+            ))}
+          </ol>
+        </aside>
+
+        <div class="case__content">
+          <slot />
+        </div>
+      </div>
     </section>
   </article>
 </BaseLayout>
@@ -93,6 +152,46 @@ const atAGlance = data.atAGlance; // { problem, built, impact }
   .case__ataglance { margin-top: 28px; }
   .grid3 { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .card { border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px; }
-  .case__body { margin-top: 36px; }
-  @media (max-width: 800px) { .grid3 { grid-template-columns: 1fr; } .case__meta { grid-template-columns: 1fr; } }
+  .case__body { margin-top: 44px; }
+  .case__body-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 36px; align-items: start; }
+
+  .case__toc-mobile { display: none; margin-bottom: 24px; border: 1px solid rgba(17,17,17,0.12); border-radius: 10px; padding: 12px 14px; background: rgba(255,255,255,0.7); }
+  .case__toc-mobile summary { cursor: pointer; font-size: 0.92rem; font-weight: 600; list-style: none; }
+  .case__toc-mobile summary::-webkit-details-marker { display: none; }
+  .case__toc-mobile ol { margin: 10px 0 0; padding-left: 1rem; display: grid; gap: 6px; }
+
+  .case__toc-desktop { position: sticky; top: 96px; border-left: 1px solid rgba(17,17,17,0.12); padding-left: 14px; }
+  .case__toc-desktop p { margin: 0 0 10px; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(17,17,17,0.6); }
+  .case__toc-desktop ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .case__toc-desktop a,
+  .case__toc-mobile a { color: inherit; text-decoration: none; font-size: 0.92rem; }
+  .case__toc-desktop a:hover,
+  .case__toc-mobile a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  .case__content { min-width: 0; }
+  .case__content :global(h2) { margin: 64px 0 14px; font-size: 1.75rem; line-height: 1.2; font-weight: 600; letter-spacing: -0.015em; scroll-margin-top: 112px; }
+  .case__content :global(h2:first-child) { margin-top: 0; }
+  .case__content :global(p),
+  .case__content :global(li) { font-size: 1.05rem; line-height: 1.85; max-width: 72ch; }
+  .case__content :global(p) { margin: 0 0 18px; color: rgba(17,17,17,0.92); }
+  .case__content :global(ul),
+  .case__content :global(ol) { margin: 0 0 24px 1.25rem; padding: 0; display: grid; gap: 8px; }
+  .case__content :global(blockquote) { margin: 0 0 24px; padding-left: 14px; border-left: 2px solid rgba(17,17,17,0.2); color: rgba(17,17,17,0.72); }
+  .case__content :global(hr) { margin: 36px 0; border: 0; border-top: 1px dashed rgba(17,17,17,0.2); }
+  .case__content :global(img),
+  .case__content :global(video) { border-radius: 12px; margin: 24px 0; }
+
+  @media (max-width: 960px) {
+    .case__body-layout { grid-template-columns: minmax(0, 1fr); }
+    .case__toc-desktop { display: none; }
+    .case__toc-mobile { display: block; }
+  }
+
+  @media (max-width: 800px) {
+    .grid3 { grid-template-columns: 1fr; }
+    .case__meta { grid-template-columns: 1fr; }
+    .case__content :global(h2) { font-size: 1.45rem; margin-top: 52px; scroll-margin-top: 96px; }
+    .case__content :global(p),
+    .case__content :global(li) { font-size: 1rem; line-height: 1.75; }
+  }
 </style>

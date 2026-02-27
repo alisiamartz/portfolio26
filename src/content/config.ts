@@ -19,9 +19,18 @@ const work = defineCollection({
     // Media
     hero: z
       .object({
-        type: z.enum(["image", "video"]).default("image"),
-        src: z.string(),
+        type: z.enum(["image", "video", "phone", "pair", "motion"]).default("image"),
+        src: z.string().optional(),
         alt: z.string().optional(),
+        caption: z.string().optional(),
+        leftSrc: z.string().optional(),
+        leftAlt: z.string().optional(),
+        rightSrc: z.string().optional(),
+        rightAlt: z.string().optional(),
+        loop: z.boolean().optional(),
+        autoplay: z.boolean().optional(),
+        muted: z.boolean().optional(),
+        controls: z.boolean().optional(),
       })
       .optional(),
 

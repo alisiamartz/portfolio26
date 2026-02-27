@@ -1,0 +1,50 @@
+---
+const {
+  leftSrc,
+  leftAlt = "",
+  rightSrc,
+  rightAlt = "",
+  caption = "",
+} = Astro.props;
+---
+
+<figure class="case-media-pair">
+  <div class="case-media-pair__grid">
+    <img src={leftSrc} alt={leftAlt} loading="lazy" />
+    <img src={rightSrc} alt={rightAlt} loading="lazy" />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .case-media-pair {
+    margin: 28px 0;
+  }
+
+  .case-media-pair__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .case-media-pair__grid img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    background: #fff;
+  }
+
+  figcaption {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: rgba(17, 17, 17, 0.62);
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    .case-media-pair__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

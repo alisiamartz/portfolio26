@@ -1,0 +1,51 @@
+---
+const {
+  src,
+  alt = "",
+  caption = "",
+  type = "auto", // auto | video | image
+  loop = true,
+  autoplay = true,
+  muted = true,
+  controls = true,
+} = Astro.props;
+
+const normalizedSrc = String(src ?? "").toLowerCase();
+const inferredType =
+  type !== "auto"
+    ? type
+    : normalizedSrc.endsWith(".gif")
+      ? "image"
+      : "video";
+---
+
+<figure class="case-motion-media">
+  {inferredType === "video" ? (
+    <video src={src} controls={controls} autoplay={autoplay} loop={loop} muted={muted} playsinline />
+  ) : (
+    <img src={src} alt={alt} loading="lazy" />
+  )}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .case-motion-media {
+    margin: 28px 0;
+  }
+
+  .case-motion-media video,
+  .case-motion-media img {
+    width: 100%;
+    display: block;
+    border-radius: 12px;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    background: #fff;
+  }
+
+  figcaption {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: rgba(17, 17, 17, 0.62);
+    text-align: center;
+  }
+</style>
