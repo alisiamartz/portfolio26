@@ -6,6 +6,7 @@ import CasePhoneMedia from "../components/CasePhoneMedia.astro";
 import CaseMediaPair from "../components/CaseMediaPair.astro";
 import CaseMotionMedia from "../components/CaseMotionMedia.astro";
 import { getTagStyles } from "../utils/tagStyles";
+import { withBasePath } from "../utils/path";
 
 const { entry } = Astro.props;
 const data = entry.data;
@@ -20,6 +21,10 @@ const coloredTags = tags.map((label) => {
 });
 const hasTimeline = Boolean(data.timeline);
 const toolsText = (data.tools?.length ?? 0) > 0 ? data.tools.join(" • ") : null;
+const base = import.meta.env.BASE_URL;
+const resolvedLogoSrc = data.logoSrc
+  ? withBasePath(data.logoSrc.startsWith("/") ? data.logoSrc : `/${data.logoSrc}`, base)
+  : undefined;
 
 const hero = data.hero; // { type?, src, alt? } (whatever your schema is)
 const atAGlance = data.atAGlance; // { problem, built, impact }
@@ -35,7 +40,14 @@ const processSections = [
 <BaseLayout title={`Alisia Martinez - ${data.title}`} description={data.description}>
   <article class="case">
     <header class="case__header">
-      <h1 class="case__title text-4xl md:text-5xl font-semibold tracking-tight">{data.title}</h1>
+      <div class="case__header-top">
+        <h1 class="case__title text-4xl md:text-5xl font-semibold tracking-tight">{data.title}</h1>
+        {resolvedLogoSrc && (
+          <div class="case__logo-wrap">
+            <img src={resolvedLogoSrc} alt={data.logoAlt ?? `${data.title} logo`} class="case__logo" loading="lazy" />
+          </div>
+        )}
+      </div>
 
       {data.description && <p class="case__desc">{data.description}</p>}
 
@@ -160,7 +172,20 @@ const processSections = [
   /* keep/replace with your existing styling system */
   .case { max-width: 980px; margin: 0 auto; padding: 48px 20px; }
   .case__header { display: grid; gap: 16px; }
+  .case__header-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
   .case__title { margin: 0; }
+  .case__logo-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    border: 1px solid rgba(17,17,17,0.12);
+    background: rgba(255,255,255,0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .case__logo { width: 38px; height: 38px; object-fit: contain; }
   .case__desc { margin: 0; opacity: 0.9; }
   .case__pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .case__meta { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 8px 0 0; }
@@ -206,6 +231,9 @@ const processSections = [
   }
 
   @media (max-width: 800px) {
+    .case__header-top { align-items: center; }
+    .case__logo-wrap { width: 46px; height: 46px; border-radius: 10px; }
+    .case__logo { width: 32px; height: 32px; }
     .grid3 { grid-template-columns: 1fr; }
     .case__meta { grid-template-columns: 1fr; }
     .case__content :global(h2) { font-size: 1.45rem; margin-top: 52px; scroll-margin-top: 96px; }
@@ -213,3 +241,100 @@ const processSections = [
     .case__content :global(li) { font-size: 1rem; line-height: 1.75; }
   }
 </style>
+
+<script is:inline>
+  const quantizeChannel = (value) => Math.round(value / 8) * 8;
+  const hasMeaningfulTransparency = (pixels, w, h) => {
+    const totalPixels = w * h;
+    const stride = totalPixels > 40000 ? 16 : 4;
+    let sampled = 0;
+    let transparent = 0;
+
+    for (let i = 3; i < pixels.length; i += stride * 4) {
+      sampled += 1;
+      if (pixels[i] < 245) transparent += 1;
+    }
+
+    return sampled > 0 && transparent / sampled > 0.01;
+  };
+
+  const pickEdgeColor = (img) => {
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    if (!w || !h) return null;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return null;
+
+    ctx.drawImage(img, 0, 0, w, h);
+    let imageData;
+    try {
+      imageData = ctx.getImageData(0, 0, w, h).data;
+    } catch {
+      return null;
+    }
+    if (hasMeaningfulTransparency(imageData, w, h)) return null;
+
+    const bins = new Map();
+    const addPixel = (x, y) => {
+      const i = (y * w + x) * 4;
+      const a = imageData[i + 3];
+      if (a < 24) return;
+      const r = quantizeChannel(imageData[i]);
+      const g = quantizeChannel(imageData[i + 1]);
+      const b = quantizeChannel(imageData[i + 2]);
+      const key = `${r},${g},${b}`;
+      bins.set(key, (bins.get(key) ?? 0) + a);
+    };
+
+    for (let x = 0; x < w; x++) {
+      addPixel(x, 0);
+      addPixel(x, h - 1);
+    }
+    for (let y = 1; y < h - 1; y++) {
+      addPixel(0, y);
+      addPixel(w - 1, y);
+    }
+
+    if (bins.size === 0) return null;
+
+    let bestKey = null;
+    let bestScore = -1;
+    for (const [key, score] of bins) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestKey = key;
+      }
+    }
+
+    if (!bestKey) return null;
+    const [r, g, b] = bestKey.split(",").map(Number);
+    return { r, g, b };
+  };
+
+  const applyLogoBackground = (wrap) => {
+    const img = wrap.querySelector("img");
+    if (!img) return;
+    const color = pickEdgeColor(img);
+    if (!color) return;
+
+    const bg = `rgb(${color.r} ${color.g} ${color.b})`;
+    const border = `rgb(${Math.max(0, Math.round(color.r * 0.82))} ${Math.max(0, Math.round(color.g * 0.82))} ${Math.max(0, Math.round(color.b * 0.82))})`;
+    wrap.style.backgroundColor = bg;
+    wrap.style.borderColor = border;
+  };
+
+  const wraps = document.querySelectorAll(".case__logo-wrap");
+  wraps.forEach((wrap) => {
+    const img = wrap.querySelector("img");
+    if (!img) return;
+    if (img.complete) {
+      applyLogoBackground(wrap);
+    } else {
+      img.addEventListener("load", () => applyLogoBackground(wrap), { once: true });
+    }
+  });
+</script>
