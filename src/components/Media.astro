@@ -1,7 +1,11 @@
 ---
+import { withBasePath } from "../utils/path";
+
 const { type = "image", src, alt = "" } = Astro.props;
 const normalizedSrc = String(src ?? "").toLowerCase();
 const isVimeo = normalizedSrc.includes("vimeo.com");
+const base = import.meta.env.BASE_URL;
+const resolvedSrc = withBasePath(src, base);
 ---
 
 {type === "video" ? (
@@ -9,7 +13,7 @@ const isVimeo = normalizedSrc.includes("vimeo.com");
     <div class="video-embed">
       <iframe
         title={alt || "Vimeo player"}
-        src={src}
+        src={resolvedSrc}
         frameborder="0"
         referrerpolicy="strict-origin-when-cross-origin"
         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
@@ -17,10 +21,10 @@ const isVimeo = normalizedSrc.includes("vimeo.com");
       />
     </div>
   ) : (
-    <video class="w-full rounded-xl border border-white/10" src={src} controls playsinline />
+    <video class="w-full rounded-xl border border-white/10" src={resolvedSrc} controls playsinline />
   )
 ) : (
-  <img class="w-full rounded-xl border border-white/10" src={src} alt={alt} loading="lazy" />
+  <img class="w-full rounded-xl border border-white/10" src={resolvedSrc} alt={alt} loading="lazy" />
 )}
 
 <style>

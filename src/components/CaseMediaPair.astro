@@ -1,4 +1,6 @@
 ---
+import { withBasePath } from "../utils/path";
+
 const {
   leftSrc,
   leftAlt = "",
@@ -6,12 +8,15 @@ const {
   rightAlt = "",
   caption = "",
 } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const resolvedLeftSrc = withBasePath(leftSrc, base);
+const resolvedRightSrc = withBasePath(rightSrc, base);
 ---
 
 <figure class="case-media-pair">
   <div class="case-media-pair__grid">
-    <img src={leftSrc} alt={leftAlt} loading="lazy" />
-    <img src={rightSrc} alt={rightAlt} loading="lazy" />
+    <img src={resolvedLeftSrc} alt={leftAlt} loading="lazy" />
+    <img src={resolvedRightSrc} alt={rightAlt} loading="lazy" />
   </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

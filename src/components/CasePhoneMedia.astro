@@ -1,10 +1,14 @@
 ---
+import { withBasePath } from "../utils/path";
+
 const { src, alt = "", caption = "" } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const resolvedSrc = withBasePath(src, base);
 ---
 
 <figure class="case-phone-media">
   <div class="case-phone-media__frame">
-    <img src={src} alt={alt} loading="lazy" />
+    <img src={resolvedSrc} alt={alt} loading="lazy" />
   </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

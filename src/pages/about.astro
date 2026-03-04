@@ -1,5 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBasePath } from "../utils/path";
+
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout title="About — Alisia Martinez" description="Experience designer + prototyper. I build things people can feel.">
@@ -7,7 +10,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     <header class="space-y-4">
       <div class="flex items-start gap-3">
         <h1 class="h1">About ✦</h1>
-        <img src="/doodles/sparkle.svg" alt="" class="mt-2 h-7 w-7" loading="lazy" />
+        <img src={withBasePath("/doodles/sparkle.svg", base)} alt="" class="mt-2 h-7 w-7" loading="lazy" />
       </div>
 
       <p class="text-lg muted max-w-3xl">
@@ -63,8 +66,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </p>
 
       <div class="flex flex-wrap gap-3 pt-2">
-        <a class="btn" href="/work">View work</a>
-        <a class="btnGhost" href="/contact">Say hi ✦</a>
+        <a class="btn" href={withBasePath("/work", base)}>View work</a>
+        <a class="btnGhost" href={withBasePath("/contact", base)}>Say hi ✦</a>
       </div>
     </section>
   </section>

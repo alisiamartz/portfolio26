@@ -1,4 +1,6 @@
 ---
+import { withBasePath } from "../utils/path";
+
 const {
   src,
   alt = "",
@@ -12,6 +14,8 @@ const {
 
 const normalizedSrc = String(src ?? "").toLowerCase();
 const isVimeo = normalizedSrc.includes("vimeo.com");
+const base = import.meta.env.BASE_URL;
+const resolvedSrc = withBasePath(src, base);
 const inferredType =
   type !== "auto"
     ? type
@@ -27,7 +31,7 @@ const inferredType =
     <div class="case-motion-media__embed">
       <iframe
         title={alt || "Vimeo player"}
-        src={src}
+        src={resolvedSrc}
         frameborder="0"
         referrerpolicy="strict-origin-when-cross-origin"
         allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
@@ -35,9 +39,9 @@ const inferredType =
       />
     </div>
   ) : inferredType === "video" ? (
-    <video src={src} controls={controls} autoplay={autoplay} loop={loop} muted={muted} playsinline />
+    <video src={resolvedSrc} controls={controls} autoplay={autoplay} loop={loop} muted={muted} playsinline />
   ) : (
-    <img src={src} alt={alt} loading="lazy" />
+    <img src={resolvedSrc} alt={alt} loading="lazy" />
   )}
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

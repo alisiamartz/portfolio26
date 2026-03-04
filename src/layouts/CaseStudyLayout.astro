@@ -5,7 +5,7 @@ import Media from "../components/Media.astro";
 import CasePhoneMedia from "../components/CasePhoneMedia.astro";
 import CaseMediaPair from "../components/CaseMediaPair.astro";
 import CaseMotionMedia from "../components/CaseMotionMedia.astro";
-import { getTagStyle } from "../utils/tagStyles";
+import { getTagStyles } from "../utils/tagStyles";
 
 const { entry } = Astro.props;
 const data = entry.data;
@@ -14,8 +14,9 @@ const data = entry.data;
 const roles = data.roles ?? [];
 const rolesText = roles.length > 0 ? roles.join(" • ") : null;
 const tags = data.tags ?? [];
-const coloredTags = tags.map((label, idx) => {
-  return { label, colors: getTagStyle(label, idx) };
+const tagStyles = getTagStyles(tags);
+const coloredTags = tags.map((label) => {
+  return { label, colors: tagStyles[label] };
 });
 const hasTimeline = Boolean(data.timeline);
 const toolsText = (data.tools?.length ?? 0) > 0 ? data.tools.join(" • ") : null;

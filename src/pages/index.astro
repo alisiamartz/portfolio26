@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import WorkCard from "../components/WorkCard.astro";
 import { getCollection } from "astro:content";
 import { compareWorkByMostRecent } from "../utils/workSort";
+import { withBasePath } from "../utils/path";
 
 const work = await getCollection("work");
 const listedWork = work.filter((e) => e.data.listed !== false);
@@ -10,6 +11,7 @@ const sortedWork = [...listedWork].sort(compareWorkByMostRecent);
 const featured = sortedWork
   .filter((e) => e.data.featured)
   .slice(0, 6);
+const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -26,7 +28,7 @@ const featured = sortedWork
         I design and build experiences people can feel > digital, immersive, and story-led.
       </h1>
         <img
-    src="/doodles/starTest.png"
+    src={withBasePath("/doodles/starTest.png", base)}
     alt=""
     class="mt-2 h-8 w-8 rotate-6"
     loading="lazy"
@@ -37,7 +39,7 @@ const featured = sortedWork
       </p>
 
       <div class="flex gap-3">
-        <a class="btn" href="/work">View work</a>
+        <a class="btn" href={withBasePath("/work", base)}>View work</a>
        <!-- <a class="btnGhost" href="/watch">Watch</a> --> 
       </div>
     </div>
@@ -57,10 +59,10 @@ const featured = sortedWork
     <div class="mt-10 card p-6">
       <div class="label">Signature lanes</div>
       <div class="mt-4 grid grid-cols-2 gap-3 text-sm">
-        <a class="card cardHover p-4" href="/work?tag=Prototyping">Interactive / Prototypes</a>
-           <a class="card cardHover p-4" href="/work?tag=XR%2FVR">Immersive / XR</a>
-        <a class="card cardHover p-4" href="/watch">Stories / Films</a>
-        <a class="card cardHover p-4" href="/playground">Live Experiences</a>
+        <a class="card cardHover p-4" href={withBasePath("/work?tag=Prototyping", base)}>Interactive / Prototypes</a>
+           <a class="card cardHover p-4" href={withBasePath("/work?tag=XR%2FVR", base)}>Immersive / XR</a>
+        <a class="card cardHover p-4" href={withBasePath("/watch", base)}>Stories / Films</a>
+        <a class="card cardHover p-4" href={withBasePath("/playground", base)}>Live Experiences</a>
       </div>
     </div>
       </section>
@@ -74,7 +76,7 @@ const featured = sortedWork
   <section class="space-y-6">
     <div class="flex items-end justify-between">
       <h2 class="h2">Selected work</h2>
-      <a class="link-accent" href="/work">All work ></a>
+      <a class="link-accent" href={withBasePath("/work", base)}>All work ></a>
     </div>
 
     <div class="grid md:grid-cols-2 gap-4">

@@ -1,10 +1,16 @@
+---
+import { withBasePath } from "../utils/path";
+
+const base = import.meta.env.BASE_URL;
+---
+
 <footer class="mt-16 border-t border-white/10">
   <div class="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 text-sm text-white/60 md:flex-row md:items-center md:justify-between">
     <div class="tracking-wide">© {new Date().getFullYear()} Alisia Martinez</div>
     <div class="flex gap-5">
-      <a class="nav-link" href="/work">Work</a>
-      <a class="nav-link" href="/about">About</a>
-      <a class="nav-link" href="/contact">Contact</a>
+      <a class="nav-link" href={withBasePath("/work", base)}>Work</a>
+      <a class="nav-link" href={withBasePath("/about", base)}>About</a>
+      <a class="nav-link" href={withBasePath("/contact", base)}>Contact</a>
     </div>
   </div>
 </footer>
