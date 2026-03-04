@@ -44,6 +44,7 @@ const processSections = [
           {coloredTags.map((tag) => (
             <Pill
               text={tag.label}
+              className="js-bouncy-pill"
               style={`background:${tag.colors.bg};border-color:${tag.colors.border};color:${tag.colors.text};`}
             />
           ))}

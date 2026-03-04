@@ -1,8 +1,19 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { playItems } from "../data/play.data";
+import { withBasePath } from "../utils/path";
 
 const frameRatios = ["aspect-[16/10]", "aspect-[4/5]", "aspect-[5/4]", "aspect-[3/4]", "aspect-[16/9]"];
+const base = import.meta.env.BASE_URL;
+const resolvedItems = playItems.map((item) => ({
+  ...item,
+  coverImage: withBasePath(item.coverImage, base),
+  hoverVideo: item.hoverVideo ? withBasePath(item.hoverVideo, base) : undefined,
+  links: item.links?.map((link) => ({
+    ...link,
+    url: link.url.startsWith("/") ? withBasePath(link.url, base) : link.url,
+  })),
+}));
 ---
 
 <BaseLayout title="Playground — Alisia Martinez" description="Stack of experiments and projects.">
@@ -14,7 +25,7 @@ const frameRatios = ["aspect-[16/10]", "aspect-[4/5]", "aspect-[5/4]", "aspect-[
 
     <div class="columns-1 gap-4 md:columns-2 xl:columns-3" id="play-stack">
       {
-        playItems.map((item, index) => (
+        resolvedItems.map((item, index) => (
           <article class="mb-4 break-inside-avoid">
             <button
               type="button"
@@ -82,7 +93,7 @@ const frameRatios = ["aspect-[16/10]", "aspect-[4/5]", "aspect-[5/4]", "aspect-[
     </div>
   </dialog>
 
-  <script type="application/json" id="play-data">{JSON.stringify(playItems)}</script>
+  <script type="application/json" id="play-data" set:html={JSON.stringify(resolvedItems)} />
 
   <script>
     const dataScript = document.getElementById("play-data");
