@@ -6,13 +6,13 @@ const base = import.meta.env.BASE_URL;
 
 <header class="border-b border-black/10 bg-[#FFFDF8]">
   <div class="container py-4 flex items-center justify-between">
-    <a href={withBasePath("/", base)} class="font-semibold tracking-tight link-accent">Alisia Martinez</a>
+    <a href={withBasePath("/", base)} class="font-semibold tracking-tight link-accent js-bouncy-brand">Alisia Martinez</a>
 
     <nav class="hidden md:flex items-center gap-6 text-sm text-black/70">
-      <a href={withBasePath("/work", base)} class="hover:text-black">Work</a>
-      <a href={withBasePath("/playground", base)} class="hover:text-black">Playground</a>
+      <a href={withBasePath("/work", base)} class="hover:text-black js-bouncy-nav">Work</a>
+      <a href={withBasePath("/playground", base)} class="hover:text-black js-bouncy-nav">Playground</a>
       <!-- <a href="/watch" class="hover:text-black">Watch</a> -->
-      <a href={withBasePath("/about", base)} class="hover:text-black">About</a>
+      <a href={withBasePath("/about", base)} class="hover:text-black js-bouncy-nav">About</a>
     </nav>
 
     <a href={withBasePath("/contact", base)} class="btn">Contact</a>

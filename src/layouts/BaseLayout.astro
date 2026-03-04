@@ -27,88 +27,106 @@ const { title = "Alisia Martinez", description = "" } = Astro.props;
       (() => {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-        const pills = Array.from(document.querySelectorAll(".js-bouncy-pill"));
-        if (!pills.length) return;
-
-        const settings = {
-          y: -4,
-          z: 10,
-          scale: 1.06,
-          rotMax: 2,
-          duration: 520,
-        };
-
-        const stateMap = new WeakMap();
-        const rafMap = new WeakMap();
-
         const elastic = (t) => {
           if (t === 0 || t === 1) return t;
           return Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1;
         };
 
-        const stopAnim = (el) => {
-          const raf = rafMap.get(el);
-          if (raf) cancelAnimationFrame(raf);
-        };
+        const initSpringHover = (selector, settings) => {
+          const elements = Array.from(document.querySelectorAll(selector));
+          if (!elements.length) return;
 
-        const animatePill = (el, opts) => {
-          stopAnim(el);
-          const base = stateMap.get(el) || { y: 0, z: 0, scale: 1, rot: 0 };
-          const target = {
-            y: opts.direction === "out" ? 0 : opts.y ?? 0,
-            z: opts.direction === "out" ? 0 : opts.z ?? 0,
-            scale: opts.direction === "out" ? 1 : opts.scale ?? 1,
-            rot: opts.direction === "out" ? 0 : opts.rot ?? 0,
+          const stateMap = new WeakMap();
+          const rafMap = new WeakMap();
+
+          const stopAnim = (el) => {
+            const raf = rafMap.get(el);
+            if (raf) cancelAnimationFrame(raf);
           };
 
-          const start = performance.now();
-          const durTranslate = settings.duration * 0.9;
-          const durScale = settings.duration * 1.15;
-          const durRotate = settings.duration * 1.3;
+          const animate = (el, opts) => {
+            stopAnim(el);
+            const base = stateMap.get(el) || { y: 0, z: 0, scale: 1, rot: 0 };
+            const target = {
+              y: opts.direction === "out" ? 0 : opts.y ?? 0,
+              z: opts.direction === "out" ? 0 : opts.z ?? 0,
+              scale: opts.direction === "out" ? 1 : opts.scale ?? 1,
+              rot: opts.direction === "out" ? 0 : opts.rot ?? 0,
+            };
 
-          const tick = (now) => {
-            const tTranslate = Math.min((now - start) / durTranslate, 1);
-            const tScale = Math.min((now - start) / durScale, 1);
-            const tRotate = Math.min((now - start) / durRotate, 1);
+            const start = performance.now();
+            const durTranslate = settings.duration * 0.9;
+            const durScale = settings.duration * 1.15;
+            const durRotate = settings.duration * 1.3;
 
-            const y = base.y + (target.y - base.y) * elastic(tTranslate);
-            const z = base.z + (target.z - base.z) * elastic(tTranslate);
-            const scale = base.scale + (target.scale - base.scale) * elastic(tScale);
-            const rot = base.rot + (target.rot - base.rot) * elastic(tRotate);
+            const tick = (now) => {
+              const tTranslate = Math.min((now - start) / durTranslate, 1);
+              const tScale = Math.min((now - start) / durScale, 1);
+              const tRotate = Math.min((now - start) / durRotate, 1);
 
-            el.style.transform = `translate3d(0, ${y}px, ${z}px) rotate(${rot}deg) scale(${scale})`;
-            stateMap.set(el, { y, z, scale, rot });
+              const y = base.y + (target.y - base.y) * elastic(tTranslate);
+              const z = base.z + (target.z - base.z) * elastic(tTranslate);
+              const scale = base.scale + (target.scale - base.scale) * elastic(tScale);
+              const rot = base.rot + (target.rot - base.rot) * elastic(tRotate);
 
-            if (tTranslate < 1 || tScale < 1 || tRotate < 1) {
-              rafMap.set(el, requestAnimationFrame(tick));
-              return;
-            }
+              el.style.transform = `translate3d(0, ${y}px, ${z}px) rotate(${rot}deg) scale(${scale})`;
+              stateMap.set(el, { y, z, scale, rot });
 
-            rafMap.delete(el);
+              if (tTranslate < 1 || tScale < 1 || tRotate < 1) {
+                rafMap.set(el, requestAnimationFrame(tick));
+                return;
+              }
+
+              rafMap.delete(el);
+            };
+
+            rafMap.set(el, requestAnimationFrame(tick));
           };
 
-          rafMap.set(el, requestAnimationFrame(tick));
-        };
+          elements.forEach((el) => {
+            el.style.transformOrigin = "50% 50%";
+            el.style.willChange = "transform";
 
-        pills.forEach((pill) => {
-          pill.style.transformOrigin = "50% 50%";
-          pill.style.willChange = "transform";
-
-          pill.addEventListener("pointerenter", () => {
-            const rot = Math.random() * settings.rotMax * 2 - settings.rotMax;
-            animatePill(pill, {
-              y: settings.y,
-              z: settings.z,
-              scale: settings.scale,
-              rot,
-              direction: "in",
+            el.addEventListener("pointerenter", () => {
+              const rot = settings.rotMax ? Math.random() * settings.rotMax * 2 - settings.rotMax : 0;
+              animate(el, {
+                y: settings.y,
+                z: settings.z,
+                scale: settings.scale,
+                rot,
+                direction: "in",
+              });
             });
-          });
 
-          const onLeave = () => animatePill(pill, { direction: "out" });
-          pill.addEventListener("pointerleave", onLeave);
-          pill.addEventListener("pointercancel", onLeave);
-          pill.addEventListener("blur", onLeave);
+            const onLeave = () => animate(el, { direction: "out" });
+            el.addEventListener("pointerleave", onLeave);
+            el.addEventListener("pointercancel", onLeave);
+            el.addEventListener("blur", onLeave);
+          });
+        };
+
+        initSpringHover(".js-bouncy-pill", {
+          y: -4,
+          z: 10,
+          scale: 1.06,
+          rotMax: 2,
+          duration: 520,
+        });
+
+        initSpringHover(".js-bouncy-nav", {
+          y: 0,
+          z: 0,
+          scale: 1.07,
+          rotMax: 0,
+          duration: 460,
+        });
+
+        initSpringHover(".js-bouncy-brand", {
+          y: 0,
+          z: 0,
+          scale: 1.12,
+          rotMax: 0,
+          duration: 500,
         });
       })();
     </script>
