@@ -24,6 +24,11 @@ jobs:
         with:
           lfs: true
 
+      - name: Pull LFS objects
+        run: |
+          git lfs install
+          git lfs pull
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -35,6 +40,13 @@ jobs:
 
       - name: Build with Astro
         run: npm run build
+
+      - name: Verify media output
+        run: |
+          test -d dist/media
+          echo "Media file count:"
+          find dist/media -type f | wc -l
+          ls -la dist/media | sed -n '1,120p'
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
