@@ -1,0 +1,47 @@
+---
+title: "Unity GUI Tools for Lift"
+description: "EditorWindow tools that speed up narrative testing by loading conversations and adjusting memory variables without touching code."
+date: 2020-07-01
+listed: false
+tags: ["Tools", "DevEx", "Narrative Systems"]
+roles: ["Lead VR Developer"]
+timeline: "July 2020"
+tools: ["Unity", "C#"]
+hero:
+  type: "image"
+  src: "Annotation 2020-07-09 120741.png"
+  alt: "Unity GUI tools screenshot"
+atAGlance:
+  problem: "Branching narrative creates lots of test states; changing code/keybindings to test each one doesn’t scale."
+  built: "Unity EditorWindow tools for loading conversations at specific points and editing memory values quickly."
+  impact: "Reduced iteration time and made state testing easier even when a headset wasn’t available."
+---
+
+<h2 id="overview">Overview</h2>
+
+Lift’s narrative branching requires jumping to specific story moments and verifying the correct follow-on behavior. I built Unity GUI tools so we could test narrative states without repeatedly editing code, recompiling, and re-running.
+
+<h2 id="challenge">Challenge</h2>
+
+- Branching stories create combinatorial test cases.
+- Manual code changes are slow and error-prone.
+- Not everyone on the team can (or should have to) put on a headset just to validate logic.
+
+<h2 id="approach">Approach</h2>
+
+- Optimize for the most common workflow: “get to a node fast, set state, validate.”
+- Make the tools usable for both VR and non-VR testing.
+- Start small, then add validation and guardrails to prevent mistakes.
+
+<h2 id="process">Process</h2>
+
+I created an EditorWindow for:
+- loading conversations at a specific point,
+- setting memory variables,
+- quickly re-running test scenarios.
+
+Early exploration included additional toggles and controls, then narrowed to the features that provided immediate daily value. The next improvements focus on input validation and polish so the tool is more self-serve.
+
+<h2 id="outcome">Outcome</h2>
+
+The tools reduced friction for narrative iteration and made it easier to debug story logic quickly—supporting a faster “test → learn → iterate” loop.

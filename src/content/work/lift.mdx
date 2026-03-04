@@ -1,44 +1,55 @@
 ---
-title: "Lift: The Last Days of the Westwind (VR)"
-description: "A story-led VR experience exploring embodiment, pacing, and choice through a cinematic interaction language."
+title: "Lift: The Last Days of the Westwind"
+description: "A VR interactive narrative where you operate an elevator in an old hotel—and the story shifts based on how you interact with guests."
+date: 2025-01-01
 featured: true
-tags: ["XR/VR", "Narrative", "Prototyping"]
-roles: ["Experience Design", "XR / Immersive", "Prototyping"]
-timeline: "Independent project"
-tools: ["Unity", "VR interaction", "Narrative systems"]
+tags: ["Game", "VR", "Lead", "Design", "Development", "Interactive Narrative"]
+roles: ["Founder", "Creative Director", "Lead VR Developer", "VR Interaction Design"]
+logoSrc: "media/logos/lift-logo.png"
+logoAlt: "Lift logo"
+timeline: "Oct 2017 — Present"
+tools: ["Unity", "C#"]
 hero:
   type: "video"
-  src: "/media/lift-hero.mp4"
-  alt: "Lift trailer / gameplay reel"
+  src: "/media/lift/lift-hero.mp4"
+  alt: "Lift: The Last Days of the Westwind"
 atAGlance:
-  problem: "How do you make narrative feel embodied—without losing clarity or pacing?"
-  built: "A VR interactive narrative with a tight interaction grammar and cinematic beats."
-  impact: "A portfolio flagship demonstrating story-first experience design and prototyping craft."
+  problem: "Branching narrative in VR only works if interactions feel embodied, readable, and accessible across play spaces and bodies."
+  built: "Core elevator + object interaction systems (wearables, lever controls, door mechanics), iterated through playtests."
+  impact: "Expanded from a top-selected university pitch into an ongoing studio effort with a stronger emphasis on player/NPC interaction."
 ---
 
-## Overview
-I wanted to build a VR narrative that feels *inevitable*—like you’re inside a scene, not watching one. “Lift” became a playground for pacing, tension, and embodied interaction.
 
-## Challenge
-How do you make narrative feel embodied without losing clarity or pacing? The experience needed to stay cinematic and emotionally legible while still giving players meaningful agency.
+<h2 id="overview">Overview</h2>
 
-## Approach
-- A **story-led interaction model** with clear affordances and restrained mechanics
-- A **pacing system** that balances exploration with narrative momentum
-- Environmental storytelling and feedback loops that support “what should I do next?”
+Lift is a VR interactive narrative experience originally built for HTC Vive, later expanded toward other headsets. You play an elevator operator in an old hotel, and the storyline changes depending on how you treat and respond to guests.
 
-## Process
-- **Make choices feel physical** (not menu-driven)
-- **Keep the player oriented** with clear feedback and staging
-- **Deliver emotion through interaction**, not exposition
+The project began as a university pitch selected from a large pool of ideas and developed by a full team, then continued beyond graduation as an ongoing studio project.
 
-### Experience principles ✦
-- **Embodiment over UI:** minimize overlays; let the world communicate
-- **Delight with restraint:** a few strong mechanics > many weak ones
-- **Cinematic clarity:** staging, timing, and feedback are part of the story
+<h2 id="challenge">Challenge</h2>
 
-## Outcome
-Lift is my proof that I can build experiences that are:
-- technically real
-- emotionally resonant
-- designed with intention from moment-to-moment
+Immersive mechanics don’t automatically translate to accessible mechanics. Early interaction concepts sometimes required too much physical effort, had unclear affordances, or didn’t scale well across different player setups and bodies.
+
+We needed interactions that still felt tactile and “VR-native,” while being reliable, comfortable, and easy to understand.
+
+<h2 id="approach">Approach</h2>
+
+- Build interactions like props: clear affordances, satisfying feedback, minimal ambiguity.
+- Prototype quickly, then harden into stable systems once the feel is right.
+- Preserve delight while improving accessibility (translate the gesture instead of removing the reward).
+
+<h2 id="process">Process</h2>
+
+**Wearables (hats + badge)**  
+Players loved “wearing” objects, so I implemented wearables early and used playtests to understand how players expressed personality through them (e.g., tipping a hat to an NPC).
+
+**Elevator floor lever**  
+A side-to-side lever motion created a distinctive physical interaction and clear visual feedback. Implementation uncovered angular drift issues; I replaced reliance on a generic toolkit approach for this object with direct calculations based on hand position to keep the lever aligned and believable.
+
+**Door opening iteration**  
+An early door-opening mechanic required bending and lifting, which was high-effort and not accessible. We explored alternatives and iterated toward an approach that reduced effort while keeping the “mechanical” satisfaction of operating an elevator.
+
+<h2 id="outcome">Outcome</h2>
+
+Lift evolved from a student project into a long-running studio effort with a deeper narrative focus. The interaction systems I built became the foundation for continued iteration as the story and moment-to-moment guest interactions expanded.
+

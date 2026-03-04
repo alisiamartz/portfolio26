@@ -2,9 +2,12 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import WorkCard from "../components/WorkCard.astro";
 import { getCollection } from "astro:content";
+import { compareWorkByMostRecent } from "../utils/workSort";
 
 const work = await getCollection("work");
-const featured = work
+const listedWork = work.filter((e) => e.data.listed !== false);
+const sortedWork = [...listedWork].sort(compareWorkByMostRecent);
+const featured = sortedWork
   .filter((e) => e.data.featured)
   .slice(0, 6);
 ---
@@ -64,6 +67,8 @@ const featured = work
           description={e.data.description}
           tags={e.data.tags}
           roles={e.data.roles}
+          logoSrc={e.data.logoSrc}
+          logoAlt={e.data.logoAlt ?? ""}
         />
       ))}
     </div>

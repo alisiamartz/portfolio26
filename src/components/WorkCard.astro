@@ -1,20 +1,48 @@
 ---
 import Pill from "./Pill.astro";
-const { href, title, description, tags = [], roles = [], featured = false } = Astro.props;
+import { getTagStyle } from "../utils/tagStyles";
+const { href, title, description, tags = [], roles = [], logoSrc, logoAlt = "" } = Astro.props;
+const rolesText = roles.length > 0 ? roles.join(" • ") : null;
+const visibleTags = (() => {
+  if (!tags.includes("Confidential")) return tags.slice(0, 3);
+
+  const firstFour = tags.slice(0, 4);
+  if (firstFour.includes("Confidential")) return firstFour;
+
+  return [...tags.slice(0, 3).filter((tag) => tag !== "Confidential"), "Confidential"];
+})();
+const resolvedLogoSrc = logoSrc
+  ? /^(?:[a-z]+:)?\/\//i.test(logoSrc) || logoSrc.startsWith("/")
+    ? logoSrc
+    : `/${logoSrc}`
+  : undefined;
 ---
 
 <a href={href} class="card cardHover block p-6">
   <div class="space-y-3">
     <div class="flex items-start justify-between gap-3">
       <div class="text-lg font-semibold tracking-tight">{title}</div>
-      {featured && <Pill tone="pop" iconSrc="/doodles/starTest.png" text="Featured" />}
+      {resolvedLogoSrc && (
+        <div class="h-8 w-8 shrink-0 rounded-[8px] border border-black/10 bg-black/5 flex items-center justify-center">
+          <img src={resolvedLogoSrc} alt={logoAlt} class="h-6 w-6 object-contain" loading="lazy" />
+        </div>
+      )}
     </div>
 
     <div class="text-sm muted">{description}</div>
 
+    {rolesText && <div class="text-sm muted">{rolesText}</div>}
+
     <div class="flex flex-wrap gap-2 pt-2">
-      {roles.slice(0, 2).map((r) => <Pill text={r} />)}
-      {tags.slice(0, 3).map((t) => <Pill text={t} tone="muted" />)}
+      {visibleTags.map((t, idx) => {
+        const colors = getTagStyle(t, idx);
+        return (
+          <Pill
+            text={t}
+            style={`background:${colors.bg};border-color:${colors.border};color:${colors.text};`}
+          />
+        );
+      })}
     </div>
   </div>
 </a>

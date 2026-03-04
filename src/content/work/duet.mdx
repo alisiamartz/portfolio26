@@ -1,41 +1,64 @@
 ---
 title: "DUET"
-description: "A real-time multi-user prototype exploring social presence, coordination, and shared system behavior."
-featured: false
-tags: ["XR/VR", "Multiplayer", "Systems"]
-roles: ["Experience Design", "XR / Immersive", "Engineering (Front-end)"]
-timeline: "Independent / prototype work"
-tools: ["Unity", "Networking", "Systems design"]
+description: "A movement ritual for virtual reality—an embodied, co-located duet guided by interactive music and light."
+date: 2021-12-31
+tags: ["Installation", "XR", "Prototyping", "Design", "Hackathon"]
+roles: ["Technical Director", "VR UX", "Prototyper"]
+logoSrc: "media/logos/duet-logo.png"
+logoAlt: "Duet logo"
+timeline: "Jan 2020 — Jan 2022 (2 years)"
+tools: ["Unity", "C#", "Oculus Quest"]
 hero:
   type: "video"
-  src: "/media/duet-hero.mp4"
-  alt: "Duet prototype clip"
+  src: "https://player.vimeo.com/video/696291069?h=fe66dede0b"
+  alt: "DUET Vimeo player"
 atAGlance:
-  problem: "How do you make collaboration feel intuitive and emotionally legible in XR?"
-  built: "A multiplayer XR prototype with shared state, coordinated interactions, and clear feedback."
-  impact: "Demonstrated systems thinking + social experience design through a working prototype."
+  problem: "Most VR experiences are solitary and screenlike; DUET explores how co-located, movement-led interaction can create intimacy and shared spectacle."
+  built: "A two-person, co-located Oculus Quest experience where paired participants are guided through an immersive choreographic ritual powered by their movement."
+  impact: "Presented publicly as a live, audience-witnessed experience—demonstrating VR as collaborative, embodied performance rather than isolated play."
 ---
 
-## Overview
-Multiplayer is where experiences become *alive*—and also where ambiguity explodes. Duet is an exploration of how to make shared actions feel coordinated, readable, and satisfying.
+import CaseMotionMedia from "../../components/CaseMotionMedia.astro";
 
-## Challenge
-How do you make collaboration feel intuitive and emotionally legible in XR? Shared interactions can become chaotic quickly, so the system had to make intent and outcomes obvious.
+<h2 id="overview">Overview</h2>
 
-## Approach
-- A multi-user interaction loop with **shared state**
-- Feedback systems to make other players’ actions **legible**
-- A simple “social choreography” where timing and role clarity matter
+DUET is a **movement ritual for virtual reality**: a co-located experience designed for two participants at a time, experienced *in front of* an audience. In pairs, participants adorn headsets and are guided by **interactive music and light** through an immersive choreographic arc—both playful and meditative—where movement isn’t just expression, it’s the input that drives the world.
 
-## Process
-- Social UX is often about **predictability** and **feedback**, not complexity
-- Shared systems need clear rules so people can trust them
-- Tiny latency/edge cases can break the emotional illusion fast
+Rather than treating the headset as an isolating device, DUET reframes VR as a space for **embodied, collaborative interaction**—and invites a new relationship between performer and spectator, even when the “performers” are everyday participants.
 
-### Experience principles ✦
-- **Make other people readable:** show intent, state, and outcome
-- **Design for coordination:** reduce ambiguity in who does what when
-- **Respect the loop:** feedback should reward cooperation immediately
+<h2 id="credits-context">Credits & context</h2>
 
-## Outcome
-The prototype demonstrated that clear state visibility and immediate feedback can make multi-user XR feel coordinated, trustworthy, and emotionally engaging.
+- Creative Director & Choreographer: Brandon Powers  
+- **Technical Director: Alisia Martinez**  
+- Lead Developer: Aaron Santiago  
+- Presented at **New York Live Arts — Live Artery (2022)**
+
+<h2 id="challenge">Challenge</h2>
+
+Co-located VR is socially and technically delicate—especially in a live setting. The experience needed to feel:
+- **safe and human** (consent, comfort, clarity),
+- **reliable in shared space** (alignment, timing, calibration),
+- and **legible to witnesses** (a satisfying arc for the room, not just the headset).
+
+<h2 id="approach">Approach</h2>
+
+- Treat interaction as **choreography**: minimal vocabulary, clear prompts, strong pacing.
+- Design for **paired intimacy + public spectacle**: what matters is the relationship between bodies in a space.
+- Use **music/light as guidance** to keep the experience intuitive and emotionally coherent.
+- Build for iteration: tune comfort, timing, and feedback until it reads as a “ritual,” not a “game loop.”
+
+<h2 id="process">Process</h2>
+
+- Prototyped the core two-person loop where **movement powers the experience**.
+- Built and refined the “guided” layer (timing, cues, feedback) so the duet feels synchronized without being rigid.
+- Iterated on co-located reliability and comfort details that matter in a live environment: onboarding, calibration, pacing, and fail-safes.
+- Shaped an experience arc that **builds toward an impactful moment of physical connection**—earned, not forced.
+
+<h2 id="outcome">Outcome</h2>
+
+DUET became a repeatable foundation for exploring **embodied collaboration in VR**—one that shifts VR from a solitary medium into a shared, witnessed, and emotionally resonant experience. It also served as a proof point that co-located XR can support performance language: intimacy, timing, presence, and connection as first-class design goals.
+
+<CaseMotionMedia
+  src="https://player.vimeo.com/video/659406428?h=94a95bceeb"
+  alt="Duet Vimeo player"
+/>

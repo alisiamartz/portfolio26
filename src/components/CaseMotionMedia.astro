@@ -3,7 +3,7 @@ const {
   src,
   alt = "",
   caption = "",
-  type = "auto", // auto | video | image
+  type = "auto", // auto | video | image | embed
   loop = true,
   autoplay = true,
   muted = true,
@@ -11,16 +11,30 @@ const {
 } = Astro.props;
 
 const normalizedSrc = String(src ?? "").toLowerCase();
+const isVimeo = normalizedSrc.includes("vimeo.com");
 const inferredType =
   type !== "auto"
     ? type
-    : normalizedSrc.endsWith(".gif")
+    : isVimeo
+      ? "embed"
+      : normalizedSrc.endsWith(".gif")
       ? "image"
       : "video";
 ---
 
 <figure class="case-motion-media">
-  {inferredType === "video" ? (
+  {inferredType === "embed" ? (
+    <div class="case-motion-media__embed">
+      <iframe
+        title={alt || "Vimeo player"}
+        src={src}
+        frameborder="0"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+        allowfullscreen
+      />
+    </div>
+  ) : inferredType === "video" ? (
     <video src={src} controls={controls} autoplay={autoplay} loop={loop} muted={muted} playsinline />
   ) : (
     <img src={src} alt={alt} loading="lazy" />
@@ -40,6 +54,22 @@ const inferredType =
     border-radius: 12px;
     border: 1px solid rgba(17, 17, 17, 0.12);
     background: #fff;
+  }
+
+  .case-motion-media__embed {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(17, 17, 17, 0.12);
+    background: #000;
+  }
+
+  .case-motion-media__embed iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
   }
 
   figcaption {

@@ -44,8 +44,7 @@
     color: var(--ink);  }
 
   .pill {
-   /*     @apply inline-flex items-center rounded-full border px-3 py-1 text-xs leading-none; */
-    @apply inline-flex items-center;
+    @apply inline-flex items-center rounded-full border px-3 py-1 text-xs leading-none font-medium whitespace-nowrap;
   }
 
 

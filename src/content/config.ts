@@ -6,11 +6,14 @@ const work = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date().optional(), // or required if you prefer
+    listed: z.boolean().default(true),
     featured: z.boolean().default(false),
 
     // Browsing + filters
     tags: z.array(z.string()).default([]),
     roles: z.array(z.string()).default([]),
+    logoSrc: z.string().optional(),
+    logoAlt: z.string().optional(),
 
     // Case study meta
     timeline: z.string().optional(),

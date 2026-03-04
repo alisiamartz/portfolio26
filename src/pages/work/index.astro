@@ -2,40 +2,29 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import WorkCard from "../../components/WorkCard.astro";
 import { getCollection } from "astro:content";
+import { compareWorkByMostRecent } from "../../utils/workSort";
 
 const work = await getCollection("work");
+const listedWork = work.filter((e) => e.data.listed !== false);
+const sortedWork = [...listedWork].sort(compareWorkByMostRecent);
 
 // read optional prefilter: /work?tag=Prototyping
 const tag = Astro.url.searchParams.get("tag");
 const list = tag
-  ? work.filter((e) => e.data.tags.includes(tag))
-  : work;
+  ? sortedWork.filter((e) => e.data.tags.includes(tag))
+  : sortedWork;
 
-const allTags = Array.from(new Set(work.flatMap((e) => e.data.tags))).sort();
+const allTags = Array.from(new Set(listedWork.flatMap((e) => e.data.tags))).sort();
 ---
 
 <BaseLayout title="Work — Alisia Martinez" description="Selected case studies and experiments.">
-  <section class="space-y-6">
-    <div class="space-y-2">
-      <h1 class="text-4xl font-semibold tracking-tight">Work</h1>
-      <p class="text-white/70 max-w-2xl">
-        Case studies across prototyping, XR, interaction systems, and story-led experiences.
+  <section class="mx-auto w-full max-w-[82rem] space-y-8 md:space-y-10">
+    <header class="space-y-3 text-center">
+      <h1 class="h1">Work</h1>
+      <p class="mx-auto max-w-xl text-sm uppercase tracking-[0.2em] text-black/45">
+        Projects across prototyping, XR, interaction systems, and story-led experiences.
       </p>
-    </div>
-
-    <div class="flex flex-wrap gap-2">
-      <a class={`btn-chip ${!tag ? "btn-chip-active" : "btn-chip-muted"}`} href="/work">All</a>
-      {allTags.map((t) => (
-        <a
-          class={`btn-chip ${
-            tag === t ? "btn-chip-active" : "btn-chip-muted"
-          }`}
-          href={`/work?tag=${encodeURIComponent(t)}`}
-        >
-          {t}
-        </a>
-      ))}
-    </div>
+    </header>
 
     <div class="grid md:grid-cols-2 gap-4 pt-4">
       {list.map((e) => (
@@ -45,7 +34,8 @@ const allTags = Array.from(new Set(work.flatMap((e) => e.data.tags))).sort();
           description={e.data.description}
           tags={e.data.tags}
           roles={e.data.roles}
-          featured={e.data.featured}
+          logoSrc={e.data.logoSrc}
+          logoAlt={e.data.logoAlt ?? ""}
         />
       ))}
     </div>
