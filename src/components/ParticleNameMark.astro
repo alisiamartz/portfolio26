@@ -1,0 +1,461 @@
+---
+interface Props {
+  text?: string;
+  subtitle?: string;
+  height?: number;
+  density?: number;
+  className?: string;
+  idleHtml?: boolean;
+  as?: "h1" | "div";
+  textClassName?: string;
+}
+
+const {
+  text = "ALISIA MARTINEZ",
+  subtitle,
+  height = 140,
+  density = 7,
+  className = "",
+  idleHtml = false,
+  as = "div",
+  textClassName = "h1",
+} = Astro.props as Props;
+
+const HeadingTag = as;
+---
+
+<div
+  class={`particle-name-mark ${className}`.trim()}
+  data-particle-name-mark
+  data-text={text}
+  data-height={String(height)}
+  data-density={String(density)}
+  data-idle-html={idleHtml ? "true" : "false"}
+  style={`height:${height}px;`}
+>
+  <HeadingTag class={`particle-name-mark__fallback ${textClassName}`.trim()} data-particle-fallback>{text}</HeadingTag>
+  {subtitle && <p class="particle-name-mark__subtitle muted text-lg">{subtitle}</p>}
+  <canvas class="particle-name-mark__canvas" data-particle-canvas aria-hidden="true"></canvas>
+</div>
+
+<script is:inline>
+  (() => {
+    const globalKey = "__particleNameMarkBooted";
+    if (window[globalKey]) {
+      window.__particleNameMarkInit?.();
+      return;
+    }
+
+    window[globalKey] = true;
+
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    const initOne = (root) => {
+      if (!root || root.dataset.particleBound === "true") return;
+      root.dataset.particleBound = "true";
+
+      const canvas = root.querySelector("[data-particle-canvas]");
+      const fallback = root.querySelector("[data-particle-fallback]");
+      if (!canvas || !fallback) return;
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reducedMotion) {
+        canvas.hidden = true;
+        return;
+      }
+
+      const context = canvas.getContext("2d", { alpha: true });
+      if (!context) {
+        canvas.hidden = true;
+        return;
+      }
+
+      const text = root.dataset.text || "ALISIA MARTINEZ";
+      const density = clamp(Number(root.dataset.density) || 7, 4, 12);
+      const configuredHeight = Math.max(72, Number(root.dataset.height) || 140);
+      const idleHtml = root.dataset.idleHtml === "true";
+      const radius = 110;
+      const strength = 2.2;
+      const spring = 0.035;
+      const friction = 0.86;
+      const epsilonVelocity = 0.03;
+      const epsilonPosition = 0.08;
+      const particleBaseRadius = idleHtml ? 1.3 : 1.15;
+      const neutralParticleColor = idleHtml ? "rgba(15,23,42,0.78)" : "rgba(15,23,42,0.65)";
+      const neutralActiveColor = "rgba(30,41,59,0.9)";
+
+      let hovered = false;
+      let pointerActive = false;
+      let pointerX = -9999;
+      let pointerY = -9999;
+      let particles = [];
+      let rafId = 0;
+      let running = false;
+      let pageVisible = !document.hidden;
+      let contentWidth = 0;
+      let contentHeight = configuredHeight;
+      let width = 0;
+      let height = configuredHeight;
+      let dpr = Math.max(1, window.devicePixelRatio || 1);
+      let resizeTimer = 0;
+      let canvasReady = false;
+      const burstPadding = 42;
+
+      const offscreen = document.createElement("canvas");
+      const offCtx = offscreen.getContext("2d", { alpha: true });
+
+      const supportsCanvas = Boolean(offCtx);
+      if (!supportsCanvas) {
+        canvas.hidden = true;
+        return;
+      }
+
+      const showFallbackOnly = () => {
+        root.classList.remove("particle-name-mark--active");
+        fallback.classList.remove("sr-only");
+        canvas.hidden = true;
+      };
+
+      const showCanvas = () => {
+        canvas.hidden = false;
+        if (!idleHtml) {
+          fallback.classList.add("sr-only");
+        }
+      };
+
+      const setIdleVisualActive = (active) => {
+        if (!idleHtml) return;
+        canvas.hidden = false;
+        fallback.classList.remove("sr-only");
+        root.classList.toggle("particle-name-mark--active", active);
+      };
+
+      const mixHue = (h1, h2, t) => {
+        const delta = ((h2 - h1 + 540) % 360) - 180;
+        return (h1 + delta * t + 360) % 360;
+      };
+
+      const hslString = (h, s, l, a) => `hsla(${Math.round(h)} ${Math.round(s)}% ${Math.round(l)}% / ${a})`;
+
+      const randomGradientConfig = () => {
+        const h1 = Math.random() * 360;
+        const h2 = (h1 + 75 + Math.random() * 140) % 360;
+        const s1 = 62 + Math.random() * 18;
+        const s2 = 58 + Math.random() * 20;
+        const l1 = 46 + Math.random() * 14;
+        const l2 = 52 + Math.random() * 14;
+        const angle = Math.random() * Math.PI * 2;
+        return { h1, h2, s1, s2, l1, l2, ux: Math.cos(angle), uy: Math.sin(angle) };
+      };
+
+      const applyRandomHoverGradient = () => {
+        const gradient = randomGradientConfig();
+        const span = Math.max(width, height) * 0.9 || 1;
+        const cx = width * 0.5;
+        const cy = height * 0.5;
+
+        for (let i = 0; i < particles.length; i += 1) {
+          const p = particles[i];
+          const projection = ((p.ax - cx) * gradient.ux + (p.ay - cy) * gradient.uy) / span;
+          const t = clamp(0.5 + projection, 0, 1);
+          const h = mixHue(gradient.h1, gradient.h2, t);
+          const s = gradient.s1 + (gradient.s2 - gradient.s1) * t;
+          const l = gradient.l1 + (gradient.l2 - gradient.l1) * t;
+          p.baseColor = hslString(h, s, l, 0.82);
+          p.hotColor = hslString(h, s + 6, Math.min(72, l + 9), 0.94);
+        }
+      };
+
+      const showIdleState = () => {
+        if (!idleHtml) {
+          showCanvas();
+          return;
+        }
+        setIdleVisualActive(false);
+      };
+
+      const computeFont = (targetWidth, targetHeight) => {
+        const computed = getComputedStyle(fallback);
+        const fontStyle = computed.fontStyle || "normal";
+        const fontVariant = computed.fontVariant || "normal";
+        const fontWeight = computed.fontWeight || "600";
+        const fontSize = computed.fontSize || `${Math.floor(targetHeight * 0.58)}px`;
+        const fontFamily = computed.fontFamily || "system-ui, sans-serif";
+        const letterSpacing = parseFloat(computed.letterSpacing || "0") || 0;
+
+        offCtx.textBaseline = "top";
+        offCtx.textAlign = "left";
+        offCtx.font = `${fontStyle} ${fontVariant} ${fontWeight} ${fontSize} ${fontFamily}`;
+        return { letterSpacing };
+      };
+
+      const drawSampleText = (x, y, letterSpacing) => {
+        if (!Number.isFinite(letterSpacing) || Math.abs(letterSpacing) < 0.01) {
+          offCtx.fillText(text, x, y);
+          return;
+        }
+
+        let cursorX = x;
+        for (let i = 0; i < text.length; i += 1) {
+          const char = text[i];
+          offCtx.fillText(char, cursorX, y);
+          cursorX += offCtx.measureText(char).width + letterSpacing;
+        }
+      };
+
+      const buildParticles = () => {
+        const rect = root.getBoundingClientRect();
+        contentWidth = Math.max(260, Math.floor(rect.width));
+        contentHeight = configuredHeight;
+        width = contentWidth + burstPadding * 2;
+        height = contentHeight + burstPadding * 2;
+        dpr = Math.max(1, window.devicePixelRatio || 1);
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        canvas.style.left = `${-burstPadding}px`;
+        canvas.style.top = `${-burstPadding}px`;
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.scale(dpr, dpr);
+
+        offscreen.width = width;
+        offscreen.height = height;
+        offCtx.clearRect(0, 0, width, height);
+        const { letterSpacing } = computeFont(width, height);
+        const textRect = fallback.getBoundingClientRect();
+        const textX = clamp(Math.round(textRect.left - rect.left) + burstPadding, 0, width - 1);
+        const textY = clamp(Math.round(textRect.top - rect.top) + burstPadding, 0, height - 1);
+        offCtx.fillStyle = "#000";
+        drawSampleText(textX, textY, letterSpacing);
+
+        const alphaThreshold = 50;
+        const imageData = offCtx.getImageData(0, 0, width, height).data;
+        const nextParticles = [];
+
+        for (let y = 0; y < height; y += density) {
+          for (let x = 0; x < width; x += density) {
+            const idx = (y * width + x) * 4 + 3;
+            if (imageData[idx] > alphaThreshold) {
+              nextParticles.push({
+                ax: x,
+                ay: y,
+                x,
+                y,
+                vx: 0,
+                vy: 0,
+                r: particleBaseRadius + Math.random() * 0.35,
+                baseColor: neutralParticleColor,
+                hotColor: neutralActiveColor,
+              });
+            }
+          }
+        }
+
+        particles = nextParticles;
+        canvasReady = particles.length > 0;
+
+        if (!canvasReady) {
+          showFallbackOnly();
+          return;
+        }
+
+        if (idleHtml) {
+          draw();
+          showIdleState();
+          return;
+        }
+
+        showCanvas();
+        draw();
+      };
+
+      const shouldKeepRunning = () => {
+        if (hovered) return true;
+        for (let i = 0; i < particles.length; i += 1) {
+          const p = particles[i];
+          if (
+            Math.abs(p.vx) > epsilonVelocity ||
+            Math.abs(p.vy) > epsilonVelocity ||
+            Math.abs(p.ax - p.x) > epsilonPosition ||
+            Math.abs(p.ay - p.y) > epsilonPosition
+          ) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      const draw = () => {
+        context.clearRect(0, 0, width, height);
+        for (let i = 0; i < particles.length; i += 1) {
+          const p = particles[i];
+          let active = false;
+
+          if (hovered && pointerActive) {
+            const dx = p.x - pointerX;
+            const dy = p.y - pointerY;
+            const dist = Math.hypot(dx, dy) || 0.0001;
+            if (dist < radius) {
+              const force = (1 - dist / radius) * strength;
+              p.vx += (dx / dist) * force;
+              p.vy += (dy / dist) * force;
+              active = true;
+            }
+          }
+
+          p.vx += (p.ax - p.x) * spring;
+          p.vy += (p.ay - p.y) * spring;
+          p.vx *= friction;
+          p.vy *= friction;
+          p.x += p.vx;
+          p.y += p.vy;
+
+          context.fillStyle = active ? p.hotColor || neutralActiveColor : p.baseColor || neutralParticleColor;
+          context.beginPath();
+          context.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          context.fill();
+        }
+      };
+
+      const tick = () => {
+        if (!pageVisible || !canvasReady) {
+          running = false;
+          rafId = 0;
+          return;
+        }
+
+        draw();
+
+        if (shouldKeepRunning()) {
+          rafId = requestAnimationFrame(tick);
+          return;
+        }
+
+        if (idleHtml && !hovered) {
+          showIdleState();
+        }
+
+        running = false;
+        rafId = 0;
+      };
+
+      const start = () => {
+        if (running || !canvasReady || !pageVisible) return;
+        running = true;
+        rafId = requestAnimationFrame(tick);
+      };
+
+      const onPointerEnter = () => {
+        hovered = true;
+        pointerActive = true;
+        if (idleHtml) {
+          setIdleVisualActive(true);
+        } else {
+          showCanvas();
+        }
+        applyRandomHoverGradient();
+        start();
+      };
+
+      const onPointerMove = (event) => {
+        const rect = root.getBoundingClientRect();
+        pointerX = event.clientX - rect.left + burstPadding;
+        pointerY = event.clientY - rect.top + burstPadding;
+        pointerActive = true;
+        start();
+      };
+
+      const onPointerLeave = () => {
+        hovered = false;
+        pointerActive = false;
+        if (idleHtml) {
+          setIdleVisualActive(false);
+        }
+        start();
+      };
+
+      const onVisibilityChange = () => {
+        pageVisible = !document.hidden;
+        if (!pageVisible && rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = 0;
+          running = false;
+          return;
+        }
+        start();
+      };
+
+      const onResize = () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          buildParticles();
+          start();
+        }, 140);
+      };
+
+      root.addEventListener("pointerenter", onPointerEnter);
+      root.addEventListener("pointermove", onPointerMove);
+      root.addEventListener("pointerleave", onPointerLeave);
+      document.addEventListener("visibilitychange", onVisibilityChange);
+      window.addEventListener("resize", onResize);
+
+      buildParticles();
+      start();
+    };
+
+    const initAll = () => {
+      document
+        .querySelectorAll("[data-particle-name-mark]")
+        .forEach((node) => initOne(node));
+    };
+
+    window.__particleNameMarkInit = initAll;
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initAll, { once: true });
+    } else {
+      initAll();
+    }
+    document.addEventListener("astro:page-load", initAll);
+  })();
+</script>
+
+<style>
+  .particle-name-mark {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .particle-name-mark__fallback {
+    margin: 0;
+    line-height: 1;
+    transition: opacity 220ms ease;
+  }
+
+  .particle-name-mark__subtitle {
+    margin-top: 0.8rem;
+    max-width: 42rem;
+  }
+
+  .particle-name-mark__canvas {
+    position: absolute;
+    display: block;
+    background: transparent;
+    transition: opacity 220ms ease;
+    pointer-events: none;
+  }
+
+  .particle-name-mark[data-idle-html="true"] .particle-name-mark__canvas {
+    opacity: 0;
+  }
+
+  .particle-name-mark[data-idle-html="true"].particle-name-mark--active .particle-name-mark__canvas {
+    opacity: 1;
+  }
+
+  .particle-name-mark[data-idle-html="true"].particle-name-mark--active .particle-name-mark__fallback {
+    opacity: 0;
+  }
+</style>

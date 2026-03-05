@@ -43,6 +43,9 @@ const work = defineCollection({
         problem: z.string(),
         built: z.string(),
         impact: z.string(),
+        problemDetails: z.array(z.string()).min(2).max(3).optional(),
+        builtDetails: z.array(z.string()).min(2).max(3).optional(),
+        impactDetails: z.array(z.string()).min(2).max(3).optional(),
       })
       .optional(),
 

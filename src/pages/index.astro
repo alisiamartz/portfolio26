@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import WorkCard from "../components/WorkCard.astro";
+import ParticleNameMark from "../components/ParticleNameMark.astro";
 import { getCollection } from "astro:content";
 import { compareWorkByMostRecent } from "../utils/workSort";
 import { withBasePath } from "../utils/path";
@@ -20,39 +21,39 @@ const base = import.meta.env.BASE_URL;
 >
   <!-- HERO -->
 
-  <section class="grid md:grid-cols-[1fr_auto_1fr] gap-10 items-start">
-        
-    <!-- Left -->
-    <div class="space-y-6">
-      <h1 class="h1">
-        I turn ideas into reality.
-      </h1>
+  <div class="grid md:grid-cols-[1fr_auto_1fr] gap-10 items-start">
+    <section class="space-y-6">
+      <ParticleNameMark
+        as="h1"
+        text="I turn ideas into reality."
+        height={150}
+        density={6}
+        idleHtml={true}
+        className="max-w-xl"
+        textClassName="h1"
+      />
 
-      <p class="muted text-lg max-w-xl"> 
+      <p class="muted text-lg max-w-xl">
         Experience Designer + Prototyper + Creator
       </p>
 
       <div class="flex gap-3">
         <a class="btn" href={withBasePath("/work", base)}>View work</a>
-       <!-- <a class="btnGhost" href="/watch">Watch</a> --> 
+       <!-- <a class="btnGhost" href="/watch">Watch</a> -->
       </div>
-    </div>
+    </section>
 
-        <!-- IDKKK Vertical divider (deck-like) -->
+    <!-- IDKKK Vertical divider (deck-like) -->
     <div class="hidden md:block w-px bg-black/10 self-stretch"></div>
 
-        <!-- Right     <div class="border border-white/10 rounded-xl p-6 text-white/70">
--->
-            <!-- POV -->
-  <section class="border border-white/10 rounded-xl p-8">
-    <div class="label">Point of view</div>
-    <div class="mt-4 text-lg max-w-3xl">
-      Experience designer + prototyper across interaction systems, XR, and story-led work.
-      I turn ambiguity into artifacts: prototypes, systems, and story-shaped experiences, so people can react to something real.
-    </div>
-  </section>
-
-  </section>
+    <section class="border border-white/10 rounded-xl p-8">
+      <div class="label">Point of view</div>
+      <div class="mt-4 text-lg max-w-3xl">
+        Experience designer + prototyper across interaction systems, XR, and story-led work.
+        I turn ambiguity into artifacts: prototypes, systems, and story-shaped experiences, so people can react to something real.
+      </div>
+    </section>
+  </div>
 
     <!-- Divider -->
   <div class="divider-dots my-16" />
