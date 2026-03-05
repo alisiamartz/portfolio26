@@ -89,7 +89,7 @@ const processSections = [
         {rolesText && (
           <>
             <dt>Roles</dt>
-            <dd>{rolesText}</dd>
+            <dd class="case__meta-roles">{rolesText}</dd>
           </>
         )}
 
@@ -213,6 +213,7 @@ const processSections = [
   .case__meta { display: grid; grid-template-columns: 120px 1fr; gap: 8px 16px; margin: 8px 0 0; }
   .case__meta dt { opacity: 0.7; }
   .case__meta dd { margin: 0; }
+  .case__meta-roles { font-weight: 600; }
   .case__hero { margin-top: 24px; }
   .case__ataglance { margin-top: 28px; }
   .case__systems-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }

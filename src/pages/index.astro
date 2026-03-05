@@ -5,7 +5,6 @@ import ParticleNameMark from "../components/ParticleNameMark.astro";
 import { getCollection } from "astro:content";
 import { compareWorkByMostRecent } from "../utils/workSort";
 import { withBasePath } from "../utils/path";
-import { getTagStyle } from "../utils/tagStyles";
 
 const work = await getCollection("work");
 const listedWork = work.filter((e) => e.data.listed !== false);
@@ -18,74 +17,56 @@ const skills = [
   {
     name: "Prototyping & interaction systems",
     subtitle: "Turning rough ideas into testable experiences.",
-    topicTag: "Prototyping",
-    weight: 2.2,
-    span: 3,
-    height: 3.1
+    marker: "square",
+    accent: "Prototyping"
   },
   {
     name: "Product design & UX",
     subtitle: "Designing clarity from complex product flows.",
-    topicTag: "Design",
-    weight: 2.0,
-    span: 3,
-    height: 2.8
+    marker: "circle",
+    accent: "UX"
   },
   {
     name: "Creative direction & storytelling",
     subtitle: "Framing concepts into memorable narratives.",
-    topicTag: "Interactive Narrative",
-    weight: 1.85,
-    span: 2,
-    height: 2.5
+    marker: "triangle",
+    accent: "storytelling"
   },
   {
     name: "Experiential / event design",
     subtitle: "Crafting spaces people can move through.",
-    topicTag: "Installation",
-    weight: 1.65,
-    span: 2,
-    height: 2.2
+    marker: "diamond",
+    accent: "event"
   },
   {
     name: "Video / content creation",
     subtitle: "Fast stories for launch, social, and demos.",
-    topicTag: "Hackathon",
-    weight: 1.4,
-    span: 1,
-    height: 1.9
+    marker: "plus",
+    accent: "Video"
   },
   {
     name: "Immersive/XR",
     subtitle: "Interaction ideas built in three dimensions.",
-    topicTag: "XR",
-    weight: 1.6,
-    span: 2,
-    height: 2.25
+    marker: "ring",
+    accent: "XR"
   },
   {
     name: "Game Design",
     subtitle: "Systems, pacing, and playful mechanics.",
-    topicTag: "Game",
-    weight: 1.3,
-    span: 2,
-    height: 1.85
+    marker: "star",
+    accent: "Game"
   },
   {
     name: "Unity, C#",
     subtitle: "Shipping prototypes with engine-level control.",
-    topicTag: "Development",
-    weight: 1.2,
-    span: 1,
-    height: 1.55
+    marker: "bar",
+    accent: "Unity"
   },
   {
     name: "Sewing + Embroidery",
     subtitle: "Physical craft folded into digital making.",
-    topicTag: "Installation",
-    weight: 1.1,
-    span: 1,
-    height: 1.35
+    marker: "dot",
+    accent: "Sewing"
   }
 ];
 ---
@@ -104,7 +85,7 @@ const skills = [
         height={150}
         density={6}
         idleHtml={true}
-        className="max-w-xl"
+        className="max-w-xl -mb-3"
         textClassName="h1"
       />
 
@@ -116,56 +97,48 @@ const skills = [
         <a class="btn" href={withBasePath("/work", base)}>View work</a>
        <!-- <a class="btnGhost" href="/watch">Watch</a> -->
       </div>
-    </section>
+
+      <!-- <section class="border border-white/10 rounded-xl p-6 md:p-7">
+        <div class="label">Point of view</div>
+        <div class="mt-4 text-lg max-w-3xl">
+          Experience designer + prototyper across interaction systems, XR, and story-led work.
+          I turn ambiguity into artifacts: prototypes, systems, and story-shaped experiences, so people can react to something real.
+        </div>
+      </section>-->
+    </section
 
     <!-- IDKKK Vertical divider (deck-like) -->
     <div class="hidden md:block w-px bg-black/10 self-stretch"></div>
 
-    <section class="border border-white/10 rounded-xl p-8">
-      <div class="label">Point of view</div>
-      <div class="mt-4 text-lg max-w-3xl">
-        Experience designer + prototyper across interaction systems, XR, and story-led work.
-        I turn ambiguity into artifacts: prototypes, systems, and story-shaped experiences, so people can react to something real.
+    <section class="skills-stack skills-stack-rail space-y-3" data-skills-stack>
+      <h2 class="h2">Skills</h2>
+      <!-- <p class="muted text-sm">Move your cursor—type reacts.</p> -->
+
+      <div class="skills-field card border-black/15 bg-white/80 p-4 md:p-5">
+        <ul class="kinetic-stack" data-skills-list>
+          {skills.map((skill, idx) => (
+            <li class="skill-row" data-skill-row>
+              <button
+                type="button"
+                class="skill-row-btn"
+                data-skill-row-btn
+                data-index={idx}
+                aria-pressed="false"
+              >
+                <span class="skill-marker" data-marker={skill.marker} aria-hidden="true"></span>
+                <span class="skill-copy">
+                  <span class="skill-label" data-skill-label>
+                    {skill.name}
+                  </span>
+                  <span class="skill-subline" data-skill-subtitle>{skill.subtitle}</span>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   </div>
-
-    <!-- Divider -->
-  <div class="divider-dots my-16" />
-
-    <!-- SKILLS -->
-  <section class="space-y-4">
-    <h2 class="h2">Skills</h2>
-    <p class="muted text-sm">Move your cursor to stir things up.</p>
-
-    <div class="skills-field card border-black/15 bg-white/80 p-4 md:p-6">
-      <ul class="skills-grid">
-        {skills.map((skill, idx) => (
-          (() => {
-            const colors = getTagStyle(skill.topicTag);
-            return (
-          <li
-            class="skill-item"
-            style={`--w:${skill.weight};--span:${skill.span};--h:${skill.height};--tilt:${idx % 3 === 0 ? "-0.8deg" : idx % 3 === 1 ? "0.65deg" : "-0.25deg"};--skill-bg:${colors.bg};--skill-border:${colors.border};--skill-text:${colors.text};`}
-            data-skill-item
-          >
-            <button
-              type="button"
-              class="skill-chip"
-              data-skill-chip
-              data-index={idx}
-              aria-pressed="false"
-            >
-              <span class="skill-title">{skill.name}</span>
-              <span class="skill-subtitle" data-skill-subtitle>{skill.subtitle}</span>
-            </button>
-          </li>
-            );
-          })()
-        ))}
-      </ul>
-    </div>
-  </section>
 
     <!-- Divider -->
   <div class="divider-dots my-16" />
@@ -199,116 +172,246 @@ const skills = [
 </BaseLayout>
 
 <style>
-  .skills-grid {
+  .skills-stack .skills-field {
+    padding-block: clamp(1.15rem, 1rem + 0.8vw, 1.8rem);
+  }
+
+  .skills-stack-rail {
+    width: min(100%, 27rem);
+    justify-self: stretch;
+  }
+
+  .skills-stack-rail .skills-field {
+    padding-inline: clamp(0.72rem, 0.62rem + 0.35vw, 0.95rem);
+  }
+
+  .kinetic-stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
+    gap: 0;
   }
 
-  .skill-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-    min-height: clamp(4rem, calc(2.8rem + (var(--h) * 0.95rem)), 7rem);
+  .skill-row {
+    border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
   }
 
-  .skill-chip {
-    --mx: 0px;
-    --my: 0px;
-    --lift: 0px;
-    --size: clamp(0.85rem, calc(0.76rem + (var(--w) * 0.09rem)), 1.02rem);
-    border: 1px solid var(--skill-border, color-mix(in oklab, var(--ink) 18%, transparent));
-    background: var(--skill-bg, color-mix(in oklab, white 92%, var(--cream)));
-    color: var(--skill-text, var(--ink));
-    box-shadow: 0 1px 0 rgba(17, 17, 17, 0.08), 0 3px 8px rgba(17, 17, 17, 0.06);
-    border-radius: 1rem;
-    font-size: var(--size);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    line-height: 1.1;
+  .skill-row:last-child {
+    border-bottom: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  }
+
+  .skill-row-btn {
+    --row-shift: 0px;
+    --row-track: 0.002em;
     width: 100%;
-    min-height: inherit;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    padding: clamp(0.66rem, 0.58rem + 0.3vw, 0.85rem) 0.1rem;
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 0.45rem;
-    padding: clamp(0.55rem, calc(0.43rem + (var(--w) * 0.08rem)), 0.8rem)
-      clamp(0.8rem, calc(0.62rem + (var(--w) * 0.18rem)), 1.2rem);
+    display: grid;
+    grid-template-columns: 1rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0.68rem;
+    transform: translate3d(var(--row-shift), 0, 0);
+    transition: transform 220ms cubic-bezier(0.2, 0.65, 0.2, 1), background-color 200ms ease;
+  }
+
+  .skill-marker {
+    width: 0.62rem;
+    height: 0.62rem;
+    margin-top: 0.37rem;
+    border: 1px solid color-mix(in oklab, var(--ink) 35%, transparent);
+    background: color-mix(in oklab, white 84%, var(--cream));
+    transition: transform 230ms cubic-bezier(0.2, 0.7, 0.2, 1), background-color 180ms ease;
+  }
+
+  .skill-marker[data-marker="circle"] { border-radius: 999px; }
+  .skill-marker[data-marker="diamond"] { transform: rotate(45deg); }
+  .skill-marker[data-marker="triangle"] {
+    width: 0;
+    height: 0;
+    margin-top: 0.25rem;
+    border-left: 0.4rem solid transparent;
+    border-right: 0.4rem solid transparent;
+    border-bottom: 0.72rem solid color-mix(in oklab, var(--ink) 32%, transparent);
+    border-top: 0;
+    background: transparent;
+  }
+  .skill-marker[data-marker="plus"] {
+    border: 0;
+    width: 0.72rem;
+    height: 0.72rem;
+    position: relative;
+    background: transparent;
+  }
+  .skill-marker[data-marker="plus"]::before,
+  .skill-marker[data-marker="plus"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: color-mix(in oklab, var(--ink) 38%, transparent);
+  }
+  .skill-marker[data-marker="plus"]::before {
+    width: 0.72rem;
+    height: 1px;
+  }
+  .skill-marker[data-marker="plus"]::after {
+    width: 1px;
+    height: 0.72rem;
+  }
+  .skill-marker[data-marker="ring"] {
+    border-radius: 999px;
+    background: transparent;
+    border-width: 2px;
+  }
+  .skill-marker[data-marker="star"] {
+    clip-path: polygon(50% 0, 61% 36%, 98% 36%, 68% 57%, 79% 92%, 50% 71%, 21% 92%, 32% 57%, 2% 36%, 39% 36%);
+  }
+  .skill-marker[data-marker="bar"] {
+    width: 0.22rem;
+    height: 0.86rem;
+    border-radius: 999px;
+  }
+  .skill-marker[data-marker="dot"] {
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 999px;
+  }
+
+  .skill-copy {
+    min-width: 0;
+    position: relative;
+    padding-bottom: 0.05rem;
+  }
+
+  .skill-label {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    font-size: clamp(0.88rem, 0.84rem + 0.2vw, 0.98rem);
+    font-weight: 420;
+    letter-spacing: var(--row-track);
+    line-height: 1.3;
+    transition: font-weight 170ms ease, letter-spacing 190ms ease;
     text-wrap: pretty;
-    transform: translate3d(var(--mx), calc(var(--my) + var(--lift)), 0) rotate(var(--tilt));
-    transition: transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      box-shadow 220ms ease,
-      border-color 220ms ease,
-      text-decoration-color 220ms ease;
-    will-change: transform;
   }
 
-  .skill-title {
+  .skill-label::before {
+    content: "";
+    position: absolute;
+    left: -0.15rem;
+    right: -0.15rem;
+    bottom: -0.02rem;
+    height: 0.9em;
+    background: color-mix(in oklab, var(--butter) 30%, transparent);
+    transform: scaleX(0.18) skewX(-8deg);
+    transform-origin: left;
+    opacity: 0;
+    z-index: -1;
+    transition: transform 260ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 200ms ease;
+  }
+
+  .skill-label::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.14rem;
+    width: 100%;
+    height: 1.5px;
+    background: color-mix(in oklab, var(--pop1) 72%, transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 240ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .skill-subline {
     display: block;
-  }
-
-  .skill-chip:hover,
-  .skill-chip:focus-visible {
-    --lift: -4px;
-    border-color: color-mix(in oklab, var(--skill-text, var(--ink)) 28%, var(--skill-border, transparent));
-    box-shadow: 0 8px 14px rgba(17, 17, 17, 0.12);
-  }
-
-  .skill-chip:hover .skill-title,
-  .skill-chip:focus-visible .skill-title {
-    text-decoration: underline;
-    text-decoration-color: color-mix(in oklab, var(--skill-text, var(--pop1)) 65%, transparent);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 4px;
-  }
-
-  @media (min-width: 768px) {
-    .skills-grid {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-    }
-
-    .skill-item {
-      grid-column: span var(--span);
-    }
-  }
-
-  .skill-chip:focus-visible {
-    outline: 2px solid color-mix(in oklab, var(--skill-text, var(--pop1)) 45%, transparent);
-    outline-offset: 2px;
-  }
-
-  .skill-chip.is-active {
-    border-color: color-mix(in oklab, var(--skill-text, var(--ink)) 36%, var(--skill-border, transparent));
-    box-shadow: 0 6px 12px rgba(17, 17, 17, 0.1);
-  }
-
-  .skill-subtitle {
-    font-size: 0.75rem;
-    color: rgb(17 17 17 / 0.65);
-    max-width: 24ch;
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    color: color-mix(in oklab, var(--ink) 68%, transparent);
     max-height: 0;
     opacity: 0;
     overflow: hidden;
     transform: translateY(-3px);
-    transition: max-height 250ms ease, opacity 200ms ease, transform 250ms ease;
+    transition: max-height 220ms ease, opacity 190ms ease, transform 220ms ease;
   }
 
-  .skill-chip:hover .skill-subtitle,
-  .skill-chip:focus-visible .skill-subtitle,
-  .skill-chip.is-active .skill-subtitle {
-    max-height: 4rem;
+  .skill-row-btn:hover,
+  .skill-row-btn:focus-visible,
+  .skill-row-btn.is-active {
+    background: color-mix(in oklab, white 45%, transparent);
+  }
+
+  .skill-row-btn:hover .skill-label,
+  .skill-row-btn:focus-visible .skill-label,
+  .skill-row-btn.is-active .skill-label {
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .skill-row-btn:hover .skill-label::before,
+  .skill-row-btn:focus-visible .skill-label::before,
+  .skill-row-btn.is-active .skill-label::before {
+    transform: scaleX(1) skewX(-8deg);
+    opacity: 1;
+  }
+
+  .skill-row-btn:hover .skill-label::after,
+  .skill-row-btn:focus-visible .skill-label::after,
+  .skill-row-btn.is-active .skill-label::after {
+    transform: scaleX(1);
+  }
+
+  .skill-row-btn:hover .skill-marker,
+  .skill-row-btn:focus-visible .skill-marker,
+  .skill-row-btn.is-active .skill-marker {
+    transform: translateY(1px) rotate(14deg) scale(1.07);
+    background: color-mix(in oklab, var(--pop1) 12%, white);
+  }
+
+  .skill-row-btn:hover .skill-marker[data-marker="triangle"],
+  .skill-row-btn:focus-visible .skill-marker[data-marker="triangle"],
+  .skill-row-btn.is-active .skill-marker[data-marker="triangle"] {
+    border-bottom-color: color-mix(in oklab, var(--pop1) 42%, var(--ink));
+    transform: translateY(1px) rotate(7deg);
+    background: transparent;
+  }
+
+  .skill-row-btn.is-active .skill-subline,
+  .skill-row-btn:hover .skill-subline,
+  .skill-row-btn:focus-visible .skill-subline {
+    max-height: 2.8rem;
     opacity: 1;
     transform: translateY(0);
   }
 
+  .skill-row-btn:focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--pop1) 55%, transparent);
+    outline-offset: -2px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .skill-chip {
-      transition: box-shadow 220ms ease, border-color 220ms ease,
-        text-decoration-color 220ms ease;
+    .skill-row-btn {
+      transition: background-color 200ms ease;
       transform: none;
+    }
+
+    .skill-marker,
+    .skill-label::before,
+    .skill-label::after,
+    .skill-subline {
+      transition: none;
+    }
+  }
+
+  @media (hover: none) {
+    .skill-row-btn:hover .skill-subline {
+      max-height: 0;
+      opacity: 0;
+      transform: translateY(-3px);
     }
   }
 </style>
@@ -316,80 +419,75 @@ const skills = [
 <script>
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
-  document.querySelectorAll(".skills-field").forEach((root) => {
-    const chips = Array.from(root.querySelectorAll("[data-skill-chip]"));
-    if (!chips.length) return;
+  document.querySelectorAll("[data-skills-stack]").forEach((root) => {
+    const rows = Array.from(root.querySelectorAll("[data-skill-row-btn]"));
+    if (!rows.length) return;
 
     const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reducedMotion = reduceMotionQuery.matches;
+    const supportsHover = window.matchMedia("(hover: hover)").matches;
     let pointerX = 0;
     let pointerY = 0;
     let pointerActive = false;
     let rafId = null;
 
-    const chipState = chips.map((chip, idx) => ({
-      chip,
+    const rowState = rows.map((row) => ({
+      row,
       x: 0,
-      y: 0,
       tx: 0,
-      ty: 0,
-      polarity: idx % 2 === 0 ? 1 : -1
+      track: 0.002
     }));
 
     const setActive = (activeIdx) => {
-      chipState.forEach((entry, idx) => {
+      rowState.forEach((entry, idx) => {
         const isActive = idx === activeIdx;
-        entry.chip.classList.toggle("is-active", isActive);
-        entry.chip.setAttribute("aria-pressed", String(isActive));
+        entry.row.classList.toggle("is-active", isActive);
+        entry.row.setAttribute("aria-pressed", String(isActive));
       });
     };
 
     const clearMotion = () => {
-      chipState.forEach((entry) => {
+      rowState.forEach((entry) => {
         entry.x = 0;
-        entry.y = 0;
         entry.tx = 0;
-        entry.ty = 0;
-        entry.chip.style.setProperty("--mx", "0px");
-        entry.chip.style.setProperty("--my", "0px");
+        entry.track = 0.002;
+        entry.row.style.setProperty("--row-shift", "0px");
+        entry.row.style.setProperty("--row-track", "0.002em");
       });
     };
 
     const updateTargets = () => {
-      if (!pointerActive || reducedMotion) {
-        chipState.forEach((entry) => {
+      if (!pointerActive || reducedMotion || !supportsHover) {
+        rowState.forEach((entry) => {
           entry.tx = 0;
-          entry.ty = 0;
+          entry.track = 0.002;
         });
         return;
       }
 
-      chipState.forEach((entry) => {
-        const rect = entry.chip.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
+      rowState.forEach((entry) => {
+        const rect = entry.row.getBoundingClientRect();
         const cy = rect.top + rect.height / 2;
-        const dx = cx - pointerX;
         const dy = cy - pointerY;
-        const dist = Math.hypot(dx, dy) || 1;
-        const influence = 170;
-        const n = clamp(1 - dist / influence, 0, 1);
-        const maxOffset = 12.5;
-        const magnitude = n * maxOffset * entry.polarity;
-        entry.tx = clamp((dx / dist) * magnitude, -14, 14);
-        entry.ty = clamp((dy / dist) * magnitude, -14, 14);
+        const influence = 185;
+        const n = clamp(1 - Math.abs(dy) / influence, 0, 1);
+        const dir = dy > 0 ? -1 : 1;
+        entry.tx = clamp(n * 12 * dir, -10, 10);
+        entry.track = 0.002 + n * 0.012;
       });
     };
 
     const animate = () => {
       let hasMotion = false;
-      chipState.forEach((entry) => {
+      rowState.forEach((entry) => {
         entry.x += (entry.tx - entry.x) * 0.16;
-        entry.y += (entry.ty - entry.y) * 0.16;
-        if (Math.abs(entry.tx - entry.x) > 0.05 || Math.abs(entry.ty - entry.y) > 0.05) {
+        const currentTrack = parseFloat(entry.row.style.getPropertyValue("--row-track")) || 0.002;
+        const nextTrack = currentTrack + (entry.track - currentTrack) * 0.2;
+        if (Math.abs(entry.tx - entry.x) > 0.05 || Math.abs(entry.track - nextTrack) > 0.0005) {
           hasMotion = true;
         }
-        entry.chip.style.setProperty("--mx", `${entry.x.toFixed(2)}px`);
-        entry.chip.style.setProperty("--my", `${entry.y.toFixed(2)}px`);
+        entry.row.style.setProperty("--row-shift", `${entry.x.toFixed(2)}px`);
+        entry.row.style.setProperty("--row-track", `${nextTrack.toFixed(4)}em`);
       });
 
       if (hasMotion || pointerActive) {
@@ -400,11 +498,12 @@ const skills = [
     };
 
     const startRaf = () => {
-      if (rafId || reducedMotion) return;
+      if (rafId || reducedMotion || !supportsHover) return;
       rafId = requestAnimationFrame(animate);
     };
 
     const onPointerMove = (event) => {
+      if (!supportsHover) return;
       pointerX = event.clientX;
       pointerY = event.clientY;
       pointerActive = true;
@@ -414,14 +513,13 @@ const skills = [
 
     const onPointerLeave = () => {
       pointerActive = false;
-      setActive(-1);
       updateTargets();
       startRaf();
     };
 
-    const onChipClick = (event) => {
+    const onRowClick = (event) => {
       const clicked = event.currentTarget;
-      const idx = chipState.findIndex((entry) => entry.chip === clicked);
+      const idx = rowState.findIndex((entry) => entry.row === clicked);
       if (idx === -1) return;
       const isActive = clicked.classList.contains("is-active");
       setActive(isActive ? -1 : idx);
@@ -439,11 +537,13 @@ const skills = [
       startRaf();
     };
 
-    root.addEventListener("pointermove", onPointerMove);
-    root.addEventListener("pointerleave", onPointerLeave);
+    if (supportsHover) {
+      root.addEventListener("pointermove", onPointerMove);
+      root.addEventListener("pointerleave", onPointerLeave);
+    }
     reduceMotionQuery.addEventListener("change", onReducedMotionChange);
-    chipState.forEach((entry) => {
-      entry.chip.addEventListener("click", onChipClick);
+    rowState.forEach((entry) => {
+      entry.row.addEventListener("click", onRowClick);
     });
 
     window.addEventListener("beforeunload", () => {

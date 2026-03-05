@@ -20,10 +20,10 @@ const resolvedLogoSrc = logoSrc
 const resolvedHref = withBasePath(href, base);
 ---
 
-<a href={resolvedHref} class="card cardHover block p-6">
+<a href={resolvedHref} class="card cardHover block p-6 js-bouncy-workcard">
   <div class="space-y-3">
     <div class="flex items-start justify-between gap-3">
-      <div class="text-lg font-semibold tracking-tight">{title}</div>
+      <div class="text-lg font-semibold tracking-tight workcard__title">{title}</div>
       {resolvedLogoSrc && (
         <div class="js-workcard-logo-wrap h-8 w-8 shrink-0 rounded-[8px] border border-black/10 bg-black/5 flex items-center justify-center">
           <img src={resolvedLogoSrc} alt={logoAlt} class="h-6 w-6 object-contain" loading="lazy" />
@@ -33,7 +33,7 @@ const resolvedHref = withBasePath(href, base);
 
     <div class="text-sm muted">{description}</div>
 
-    {rolesText && <div class="text-sm muted">{rolesText}</div>}
+    {rolesText && <div class="text-sm muted font-semibold">{rolesText}</div>}
 
     <div class="flex flex-wrap gap-2 pt-2">
       {visibleTags.map((t) => {
@@ -146,3 +146,28 @@ const resolvedHref = withBasePath(href, base);
     }
   });
 </script>
+
+<style>
+  .js-bouncy-workcard {
+    transition-property: border-color, box-shadow, background-color, color, opacity;
+  }
+
+  .workcard__title {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+    transition: text-decoration-color 180ms ease;
+  }
+
+  .js-bouncy-workcard:hover .workcard__title,
+  .js-bouncy-workcard:focus-visible .workcard__title {
+    text-decoration-color: color-mix(in oklab, var(--pop1) 55%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .workcard__title {
+      transition: none;
+    }
+  }
+</style>
